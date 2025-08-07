@@ -2,25 +2,27 @@ package com.xiangjia.locallife;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-// 修改这一行 - 删除 com.local.locallife 的导入
-// import com.local.locallife.BaseActivity;
-// import com.local.locallife.R;
-import androidx.appcompat.app.AppCompatActivity; 
-import com.xiangjia.locallife.ui.fragment.DifyFragment;
-import com.xiangjia.locallife.ui.fragment.LocalNewsFragment;
-import com.xiangjia.locallife.ui.fragment.MainPageFragment;
-import com.xiangjia.locallife.ui.fragment.MyFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
-// 直接继承 AppCompatActivity 而不是 BaseActivity
+/**
+ * MainActivity - 支持Fragment的版本
+ * 使用ViewPager2 + BottomNavigationView + Fragment架构
+ */
 public class MainActivity extends AppCompatActivity {
+    
     private static final String TAG = "MainActivity";
     
     private ViewPager2 viewPager;
@@ -33,42 +35,61 @@ public class MainActivity extends AppCompatActivity {
     private static final int TAB_DIFY = 2;          // dify - DIFY工作流
     private static final int TAB_MY = 3;            // my - 个人中心
 
+    // 可刷新Fragment接口
+    public interface RefreshableFragment {
+        void onRefresh();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         
-        Log.d(TAG, "MainActivity onCreate");
-
-        initViews();
-        setupViewPager();
-        setupBottomNavigation();
+        Log.d(TAG, "MainActivity onCreate started");
+        
+        try {
+            // 先尝试加载XML布局
+            setContentView(R.layout.activity_main);
+            initViews();
+            setupViewPager();
+            setupBottomNavigation();
+            Log.d(TAG, "MainActivity layout created successfully");
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading XML layout, falling back to simple layout", e);
+            // 如果XML布局加载失败，回退到简单布局
+            createFallbackLayout();
+        }
     }
-
+    
+    /**
+     * 初始化视图
+     */
     private void initViews() {
         viewPager = findViewById(R.id.view_pager);
         bottomNav = findViewById(R.id.bottom_navigation);
         
         if (viewPager == null) {
             Log.e(TAG, "ViewPager not found! Check R.layout.activity_main");
-            return;
+            throw new RuntimeException("ViewPager not found");
         }
         
         if (bottomNav == null) {
             Log.e(TAG, "BottomNavigation not found!");
-            return;
+            throw new RuntimeException("BottomNavigation not found");
         }
     }
-
+    
+    /**
+     * 设置ViewPager
+     */
     private void setupViewPager() {
         try {
             pagerAdapter = new TabPagerAdapter(this);
             
-            // 临时添加简单的 Fragment，等其他 Fragment 修复后再替换
-            pagerAdapter.addFragment(new SimpleFragment("首页"), "首页");
-            pagerAdapter.addFragment(new SimpleFragment("今日时讯"), "今日时讯");
-            pagerAdapter.addFragment(new SimpleFragment("AI助手"), "AI助手");
-            pagerAdapter.addFragment(new SimpleFragment("个人中心"), "个人中心");
+            // 添加Fragment，如果Fragment不存在会用SimpleFragment替代
+            pagerAdapter.addFragment(createMainPageFragment(), "首页");
+            pagerAdapter.addFragment(createLocalNewsFragment(), "今日时讯");
+            pagerAdapter.addFragment(createDifyFragment(), "AI助手");
+            pagerAdapter.addFragment(createMyFragment(), "个人中心");
 
             viewPager.setAdapter(pagerAdapter);
             viewPager.setUserInputEnabled(true);
@@ -79,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Error setting up ViewPager: " + e.getMessage());
         }
     }
-
+    
+    /**
+     * 设置底部导航
+     */
     private void setupBottomNavigation() {
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -136,25 +160,89 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 刷新当前Fragment（如果实现了RefreshableFragment接口）
+    
+    /**
+     * 创建MainPageFragment
+     */
+    private Fragment createMainPageFragment() {
         try {
-            int currentItem = viewPager.getCurrentItem();
-            Fragment currentFragment = pagerAdapter.getFragment(currentItem);
-            
-            if (currentFragment instanceof RefreshableFragment) {
-                ((RefreshableFragment) currentFragment).onRefresh();
-            }
+            // 尝试创建真正的MainPageFragment
+            Class<?> fragmentClass = Class.forName("com.xiangjia.locallife.ui.fragment.MainPageFragment");
+            return (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
-            Log.e(TAG, "Error refreshing current fragment: " + e.getMessage());
+            Log.w(TAG, "MainPageFragment not found, using SimpleFragment");
+            return new SimpleFragment("🏠 首页\n\n主要功能入口");
         }
     }
+    
+    /**
+     * 创建LocalNewsFragment
+     */
+    private Fragment createLocalNewsFragment() {
+        try {
+            Class<?> fragmentClass = Class.forName("com.xiangjia.locallife.ui.fragment.LocalNewsFragment");
+            return (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            Log.w(TAG, "LocalNewsFragment not found, using SimpleFragment");
+            return new SimpleFragment("📰 今日时讯\n\n本地新闻资讯");
+        }
+    }
+    
+    /**
+     * 创建DifyFragment
+     */
+    private Fragment createDifyFragment() {
+        try {
+            Class<?> fragmentClass = Class.forName("com.xiangjia.locallife.ui.fragment.DifyFragment");
+            return (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            Log.w(TAG, "DifyFragment not found, using SimpleFragment");
+            return new SimpleFragment("🤖 AI助手\n\n智能对话功能");
+        }
+    }
+    
+    /**
+     * 创建MyFragment
+     */
+    private Fragment createMyFragment() {
+        try {
+            Class<?> fragmentClass = Class.forName("com.xiangjia.locallife.ui.fragment.MyFragment");
+            return (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            Log.w(TAG, "MyFragment not found, using SimpleFragment");
+            return new SimpleFragment("👤 个人中心\n\n个人设置和信息");
+        }
+    }
+    
+    /**
+     * 备用简单布局
+     */
+    private void createFallbackLayout() {
+        LinearLayout mainLayout = new LinearLayout(this);
+        mainLayout.setOrientation(LinearLayout.VERTICAL);
+        mainLayout.setPadding(40, 60, 40, 40);
+        mainLayout.setBackgroundColor(0xFFF8FAFC);
+        
+        TextView titleText = new TextView(this);
+        titleText.setText("🏠 湘湘管家\n(简化模式)");
+        titleText.setTextSize(24);
+        titleText.setTextColor(0xFF1F2937);
+        titleText.setGravity(android.view.Gravity.CENTER);
+        titleText.setPadding(0, 0, 0, 40);
+        mainLayout.addView(titleText);
+        
+        TextView infoText = new TextView(this);
+        infoText.setText("布局文件加载失败，当前运行在简化模式下。\n请创建必要的布局文件以恢复完整UI。");
+        infoText.setTextSize(14);
+        infoText.setTextColor(0xFF6B7280);
+        infoText.setGravity(android.view.Gravity.CENTER);
+        mainLayout.addView(infoText);
+        
+        setContentView(mainLayout);
+    }
 
-    // ViewPager2 适配器
-    private static class TabPagerAdapter extends FragmentStateAdapter {
+    // ViewPager2适配器
+    public static class TabPagerAdapter extends FragmentStateAdapter {
         private final List<Fragment> fragmentList = new ArrayList<>();
         private final List<String> fragmentTitleList = new ArrayList<>();
 
@@ -192,29 +280,44 @@ public class MainActivity extends AppCompatActivity {
             return "";
         }
     }
-
-    // 可刷新Fragment接口
-    public interface RefreshableFragment {
-        void onRefresh();
-    }
     
     // 临时简单Fragment
     public static class SimpleFragment extends Fragment {
-        private String title;
+        private String content;
         
-        public SimpleFragment(String title) {
-            this.title = title;
+        public SimpleFragment(String content) {
+            this.content = content;
         }
         
         @Override
         public android.view.View onCreateView(@NonNull android.view.LayoutInflater inflater, 
                                             android.view.ViewGroup container, 
                                             Bundle savedInstanceState) {
+            LinearLayout layout = new LinearLayout(getContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.setPadding(40, 80, 40, 40);
+            layout.setGravity(android.view.Gravity.CENTER);
+            
             android.widget.TextView textView = new android.widget.TextView(getContext());
-            textView.setText(title + " - 功能开发中...");
+            textView.setText(content);
             textView.setGravity(android.view.Gravity.CENTER);
-            textView.setTextSize(18);
-            return textView;
+            textView.setTextSize(16);
+            textView.setTextColor(0xFF374151);
+            layout.addView(textView);
+            
+            return layout;
         }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "MainActivity onResume");
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "MainActivity onPause");
     }
 }

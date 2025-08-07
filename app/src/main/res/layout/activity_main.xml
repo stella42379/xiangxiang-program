@@ -19,8 +19,6 @@
         android:layout_height="56dp"
         android:background="@android:color/white"
         android:elevation="8dp"
-        app:itemIconTint="@color/bottom_nav_color_selector"
-        app:itemTextColor="@color/bottom_nav_color_selector"
         app:menu="@menu/bottom_navigation_menu" />
     
 </LinearLayout>
