@@ -65,5 +65,8 @@
     
     <!-- ============ 阴影颜色 ============ -->
     <color name="shadow_color">#20000000</color>
+
+    <color name="background_gradient_start">#667eea</color>
+    <color name="background_gradient_end">#764ba2</color>
     
 </resources>
