@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============ 湘湘管家主题色系 ============ -->
+    <!-- 主色调 - 对应小程序配色 #2d8cf0 -->
+    <color name="primary_color">#2d8cf0</color>
+    <color name="primary_dark">#1976d2</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="accent_color">#FF4081</color>
+    
+    <!-- ============ 背景色系 ============ -->
+    <color name="main_background">#FFF6F6F6</color>
+    <color name="background_primary">#FFFFFF</color>
+    <color name="background_secondary">#F5F5F5</color>
+    <color name="background_card">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="glass_background">#80FFFFFF</color>
+    
+    <!-- ============ 文本颜色系 ============ -->
+    <color name="text_primary">#FF212121</color>
+    <color name="primary_text">#212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="secondary_text">#757575</color>
+    <color name="text_hint">#FFBDBDBD</color>
+    <color name="hint_text">#BDBDBD</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- ============ 边框和分割线 ============ -->
+    <color name="divider_color">#FFE0E0E0</color>
+    <color name="border_color">#FFE0E0E0</color>
+    
+    <!-- ============ 底部导航颜色 ============ -->
+    <color name="bottom_nav_selected">#2d8cf0</color>
+    <color name="bottom_nav_unselected">#80848f</color>
+    
+    <!-- ============ 渐变色彩 ============ -->
+    <color name="gradient_start">#FFB6C1</color>
+    <color name="gradient_end">#87CEEB</color>
+    
+    <!-- ============ 状态颜色 ============ -->
+    <color name="success_color">#FF4CAF50</color>
+    <color name="success_green">#4CAF50</color>
+    <color name="warning_color">#FFFF9800</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="error_color">#FFF44336</color>
+    <color name="error_red">#F44336</color>
+    <color name="info_color">#FF2196F3</color>
+    
+    <!-- ============ 按钮颜色 ============ -->
+    <color name="button_primary">#FF2196F3</color>
+    <color name="button_primary_pressed">#FF1976D2</color>
+    <color name="button_secondary">#FFE0E0E0</color>
+    <color name="button_danger">#FFF44336</color>
+    
+    <!-- ============ AI聊天界面颜色 ============ -->
+    <color name="ai_bubble_background">#E3F2FD</color>
+    <color name="chat_ai_bubble">#FFF5F5F5</color>
+    <color name="user_bubble_background">#2d8cf0</color>
+    <color name="chat_user_bubble">#FF2196F3</color>
+    <color name="chat_background">#FFFAFAFA</color>
+    
+    <!-- ============ 透明度颜色 ============ -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+    
+    <!-- ============ 阴影颜色 ============ -->
+    <color name="shadow_color">#20000000</color>
+    
+</resources>

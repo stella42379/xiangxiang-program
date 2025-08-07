@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="状态" />
+
+    <TextView
+        android:id="@+id/estimated_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="预计时间" />
+
+    <TextView
+        android:id="@+id/affected_area_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="影响区域" />
+
+    <Button
+        android:id="@+id/report_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="报告" />
+
+    <Button
+        android:id="@+id/query_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/outage_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- 用户消息 -->
+    <LinearLayout
+        android:id="@+id/user_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/user_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="280dp"
+            android:text="用户消息内容"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/chat_bubble_user"
+            android:padding="12dp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="@string/user_avatar"
+            android:background="@drawable/glass_card_background" />
+    </LinearLayout>
+
+    <!-- AI消息 -->
+    <LinearLayout
+        android:id="@+id/ai_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ai_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="@string/ai_avatar"
+            android:background="@drawable/glass_card_background"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/ai_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="280dp"
+            android:text="AI回复内容"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/chat_bubble_ai"
+            android:padding="12dp" />
+    </LinearLayout>
+
+    <!-- 时间戳 -->
+    <TextView
+        android:id="@+id/message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:30"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:visibility="gone" />
+
+</LinearLayout>

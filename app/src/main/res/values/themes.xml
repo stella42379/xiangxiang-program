@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 湘湘管家基础主题 -->
+    <style name="Base.Theme.LocalLife" parent="Theme.Material3.DayNight">
+        <!-- 应用主色调 -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        
+        <!-- 背景色 -->
+        <item name="android:windowBackground">@color/main_background</item>
+        <item name="colorSurface">@color/card_background</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        <!-- 状态栏和导航栏 -->
+        <item name="android:statusBarColor">@color/primary_color</item>
+        <item name="android:navigationBarColor">@color/main_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- 文本颜色 -->
+        <item name="colorOnSecondary">@color/text_secondary</item>
+        
+        <!-- 按钮样式 -->
+        <item name="materialButtonStyle">@style/XiangJia.Button.Primary</item>
+    </style>
+
+    <!-- 应用主题 -->
+    <style name="Theme.LocalLife" parent="Base.Theme.LocalLife" />
+    
+    <!-- 湘湘管家无ActionBar主题（用于MainActivity） -->
+    <style name="XiangJiaTheme.NoActionBar" parent="Theme.LocalLife">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    
+    <!-- 湘湘管家按钮样式 -->
+    <style name="XiangJia.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/primary_color</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <!-- 湘湘管家卡片样式 -->
+    <style name="XiangJia.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">8dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+    
+    <!-- 湘湘管家输入框样式 -->
+    <style name="XiangJia.EditText" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary_color</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+    </style>
+    
+    <!-- 工具栏样式 -->
+    <style name="XiangJia.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/primary_color</item>
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    
+    <!-- 底部导航样式 -->
+    <style name="XiangJia.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_color_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_color_selector</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+</resources>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用名称 - 从"本地生活"改为"湘湘管家" -->
+    <string name="app_name">湘湘管家</string>
+    
+    <!-- 按钮文本 -->
+    <string name="voice_button">语音输入</string>
+    <string name="send_button">发送消息</string>
+    <string name="submit_button">提交</string>
+    <string name="cancel_button">取消</string>
+    <string name="confirm_button">确认</string>
+    <string name="retry_button">重试</string>
+    <string name="refresh_button">刷新</string>
+    <string name="save_button">保存</string>
+    <string name="delete_button">删除</string>
+    <string name="edit_button">编辑</string>
+    <string name="back_button">返回</string>
+    
+    <!-- 导航标签 -->
+    <string name="tab_main_page">首页</string>
+    <string name="tab_local_news">今日时讯</string>
+    <string name="tab_dify">DIFY工作流</string>
+    <string name="tab_my">个人中心</string>
+    
+    <!-- 主页面文本 -->
+    <string name="welcome_message">欢迎使用湘湘管家</string>
+    <string name="ai_assistant_title">AI智能助手</string>
+    <string name="maintenance_services">维修服务</string>
+    <string name="emergency_services">紧急服务</string>
+    <string name="daily_services">日常服务</string>
+    
+    <!-- 服务功能标题 -->
+    <string name="repair_service">故障报修</string>
+    <string name="medical_service">紧急送医</string>
+    <string name="inspection_service">日常检查</string>
+    <string name="weather_service">天气预警</string>
+    <string name="outage_service">停水停电</string>
+    <string name="hospital_service">医院导航</string>
+    <string name="text_to_speech_service">文本转语音</string>
+    <string name="poster_generator_service">海报生成器</string>
+    <string name="tour_assistant_service">旅游助手</string>
+    <string name="couplet_generator_service">春联生成器</string>
+    
+    <!-- 对话相关 -->
+    <string name="chat_hint">输入您的问题...</string>
+    <string name="ai_thinking">AI正在思考中...</string>
+    <string name="send_message">发送消息</string>
+    <string name="voice_input">语音输入</string>
+    <string name="message_sent">消息已发送</string>
+    <string name="network_error">网络连接失败，请检查网络设置</string>
+    
+    <!-- 表单相关 -->
+    <string name="repair_title_hint">请输入故障标题</string>
+    <string name="repair_description_hint">请详细描述故障情况</string>
+    <string name="contact_phone_hint">请输入联系电话</string>
+    <string name="address_hint">请输入详细地址</string>
+    <string name="priority_hint">请选择优先级</string>
+    
+    <!-- 优先级选项 -->
+    <string name="priority_low">低</string>
+    <string name="priority_medium">中</string>
+    <string name="priority_high">高</string>
+    <string name="priority_urgent">紧急</string>
+    
+    <!-- 状态文本 -->
+    <string name="status_pending">待处理</string>
+    <string name="status_processing">处理中</string>
+    <string name="status_completed">已完成</string>
+    <string name="status_cancelled">已取消</string>
+    
+    <!-- 个人中心 -->
+    <string name="my_orders">我的订单</string>
+    <string name="my_address">我的地址</string>
+    <string name="customer_service">客服中心</string>
+    <string name="help_center">帮助中心</string>
+    <string name="system_settings">系统设置</string>
+    <string name="about_us">关于我们</string>
+    <string name="logout">退出登录</string>
+    
+    <!-- 新闻相关 -->
+    <string name="news_loading">正在加载新闻...</string>
+    <string name="news_empty">暂无新闻内容</string>
+    <string name="news_error">新闻加载失败</string>
+    <string name="pull_to_refresh">下拉刷新</string>
+    
+    <!-- 错误提示 -->
+    <string name="error_network">网络连接失败</string>
+    <string name="error_server">服务器错误</string>
+    <string name="error_unknown">未知错误</string>
+    <string name="loading">加载中...</string>
+    <string name="loading_please_wait">正在加载，请稍候...</string>
+    
+    <!-- 通用文本 -->
+    <string name="title">标题</string>
+    <string name="description">描述</string>
+    <string name="time">时间</string>
+    <string name="location">位置</string>
+    <string name="phone">电话</string>
+    <string name="address">地址</string>
+    <string name="name">姓名</string>
+    <string name="user_name">用户昵称</string>
+    <string name="user_phone">手机号码</string>
+    
+    <!-- 成功提示 -->
+    <string name="submit_success">提交成功</string>
+    <string name="save_success">保存成功</string>
+    <string name="delete_success">删除成功</string>
+    
+    <!-- 确认对话框 -->
+    <string name="confirm_delete">确认删除吗？</string>
+    <string name="confirm_logout">确认退出登录吗？</string>
+    <string name="confirm_submit">确认提交吗？</string>
+    
+    <!-- 医疗服务 -->
+    <string name="emergency_call">紧急呼叫</string>
+    <string name="medical_history">病史记录</string>
+    <string name="contact_person">紧急联系人</string>
+    <string name="medical_info">医疗信息</string>
+    
+    <!-- 版本信息 -->
+    <string name="version_name">版本</string>
+    <string name="app_version">v1.0.0</string>
+    
+    <!-- 内容描述字符串 - 用于accessibility -->
+    <string name="weather_icon">天气图标</string>
+    <string name="user_avatar">用户头像</string>
+    <string name="ai_avatar">AI助手头像</string>
+    <string name="emergency_icon">紧急服务图标</string>
+    <string name="service_icon">服务图标</string>
+    <string name="news_image">新闻图片</string>
+    <string name="arrow_right">右箭头</string>
+    <string name="edit_profile">编辑资料</string>
+</resources>
