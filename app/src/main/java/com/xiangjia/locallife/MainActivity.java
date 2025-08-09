@@ -23,7 +23,7 @@ import com.xiangjia.locallife.ui.fragment.ForumFragment;
 
 
 /**
- * 湘湘管家主Activity - 完整版本，使用所有Fragment
+ * 湘湘管家主Activity - 安全集成新MyFragment版本
  */
 public class MainActivity extends AppCompatActivity {
     
@@ -88,43 +88,61 @@ public class MainActivity extends AppCompatActivity {
     }
     
     /**
-     * 设置ViewPager2
+     * 设置ViewPager2 - 安全集成新MyFragment
      */
     private void setupViewPager() {
         pagerAdapter = new MainPagerAdapter(this);
         
         // 安全地添加Fragment，避免崩溃
         try {
-            // 主页Fragment - 使用简单版本避免复杂依赖
+            // 1. 主页Fragment - 使用简单版本避免复杂依赖
             try {
                 pagerAdapter.addFragment(new MainPageFragment(), TAB_TITLES[0]);
+                Log.d(TAG, "主页Fragment添加成功");
             } catch (Exception e) {
                 Log.w(TAG, "MainPageFragment创建失败，使用备用", e);
                 pagerAdapter.addFragment(new SimpleFragment("湘湘管家\n\n社区服务平台"), TAB_TITLES[0]);
             }
             
-            // 新闻Fragment - 使用安全版本
-            pagerAdapter.addFragment(new LocalNewsFragment(), TAB_TITLES[1]);
+            // 2. 新闻Fragment - 使用安全版本
+            try {
+                pagerAdapter.addFragment(new LocalNewsFragment(), TAB_TITLES[1]);
+                Log.d(TAG, "新闻Fragment添加成功");
+            } catch (Exception e) {
+                Log.w(TAG, "LocalNewsFragment创建失败，使用备用", e);
+                pagerAdapter.addFragment(new SimpleFragment("今日时讯\n\n新闻资讯\n(正在加载...)"), TAB_TITLES[1]);
+            }
             
-             // 论坛Fragment - 新增！
-             try {
+            // 3. 论坛Fragment - AI助手位置
+            try {
                 pagerAdapter.addFragment(new ForumFragment(), TAB_TITLES[2]);
                 Log.d(TAG, "论坛Fragment添加成功");
             } catch (Exception e) {
                 Log.w(TAG, "ForumFragment创建失败，使用备用", e);
-                pagerAdapter.addFragment(new SimpleFragment("社区论坛\n\n讨论和交友平台\n(正在加载...)"), TAB_TITLES[2]);
+                pagerAdapter.addFragment(new SimpleFragment("AI助手\n\n智能对话平台\n(正在加载...)"), TAB_TITLES[2]);
             }
             
-            // 个人中心Fragment - 暂时使用简单版本
-            pagerAdapter.addFragment(new SimpleFragment("个人中心\n\n个人信息和设置\n(开发中)"), TAB_TITLES[3]);
+            // 4. 个人中心Fragment - ⭐ 关键改动：安全集成新MyFragment
+            try {
+                // 首先检查是否有必需的依赖类
+                if (isMyFragmentDependenciesAvailable()) {
+                    MyFragment myFragment = new MyFragment();
+                    pagerAdapter.addFragment(myFragment, TAB_TITLES[3]);
+                    Log.d(TAG, "新版个人中心Fragment添加成功！");
+                } else {
+                    Log.w(TAG, "个人中心Fragment依赖不完整，使用简化版本");
+                    pagerAdapter.addFragment(new SimplePersonalFragment(), TAB_TITLES[3]);
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "MyFragment创建失败，使用备用", e);
+                // 备用简单个人中心
+                pagerAdapter.addFragment(new SimplePersonalFragment(), TAB_TITLES[3]);
+            }
             
         } catch (Exception e) {
             Log.e(TAG, "Fragment创建失败", e);
-            // 备用方案
-            pagerAdapter.addFragment(new SimpleFragment("湘湘管家\n\n主页"), TAB_TITLES[0]);
-            pagerAdapter.addFragment(new SimpleFragment("今日时讯\n\n加载中..."), TAB_TITLES[1]);
-            pagerAdapter.addFragment(new SimpleFragment("AI助手\n\n开发中"), TAB_TITLES[2]);
-            pagerAdapter.addFragment(new SimpleFragment("个人中心\n\n开发中"), TAB_TITLES[3]);
+            // 完全备用方案
+            createFallbackFragments();
         }
         
         viewPager.setAdapter(pagerAdapter);
@@ -137,12 +155,49 @@ public class MainActivity extends AppCompatActivity {
                 updateBottomNavigationSelection(position);
                 Log.d(TAG, "切换到页面: " + pagerAdapter.getTitle(position));
 
-                // 当切换到论坛页面时的特殊处理
-                if (position == 2) {
-                    Log.d(TAG, "用户进入论坛页面");
+                // 特殊处理
+                switch (position) {
+                    case 2:
+                        Log.d(TAG, "用户进入AI助手页面");
+                        break;
+                    case 3:
+                        Log.d(TAG, "用户进入个人中心页面");
+                        break;
                 }
             }
         });
+    }
+    
+    /**
+     * 检查MyFragment依赖是否可用
+     */
+    private boolean isMyFragmentDependenciesAvailable() {
+        try {
+            // 检查关键类是否存在
+            Class.forName("com.xiangjia.locallife.model.UserInfo");
+            Class.forName("com.xiangjia.locallife.model.NotificationItem");
+            Class.forName("com.xiangjia.locallife.util.UserManager");
+            Class.forName("com.xiangjia.locallife.util.NotificationManager");
+            
+            // 检查SwipeRefreshLayout是否可用
+            Class.forName("androidx.swiperefreshlayout.widget.SwipeRefreshLayout");
+            
+            Log.d(TAG, "个人中心Fragment所有依赖检查通过");
+            return true;
+        } catch (ClassNotFoundException e) {
+            Log.w(TAG, "个人中心Fragment依赖检查失败: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * 创建备用Fragment
+     */
+    private void createFallbackFragments() {
+        pagerAdapter.addFragment(new SimpleFragment("湘湘管家\n\n主页"), TAB_TITLES[0]);
+        pagerAdapter.addFragment(new SimpleFragment("今日时讯\n\n加载中..."), TAB_TITLES[1]);
+        pagerAdapter.addFragment(new SimpleFragment("AI助手\n\n开发中"), TAB_TITLES[2]);
+        pagerAdapter.addFragment(new SimplePersonalFragment(), TAB_TITLES[3]);
     }
     
     /**
@@ -192,9 +247,14 @@ public class MainActivity extends AppCompatActivity {
             if (currentTabIndex != index) {
                 viewPager.setCurrentItem(index, true);
 
-                // 论坛页面点击日志
-                if (index == 2) {
-                    Log.d(TAG, "用户点击论坛Tab");
+                // 特殊页面点击日志
+                switch (index) {
+                    case 2:
+                        Log.d(TAG, "用户点击AI助手Tab");
+                        break;
+                    case 3:
+                        Log.d(TAG, "用户点击个人中心Tab");
+                        break;
                 }
             }
         });
@@ -298,6 +358,100 @@ public class MainActivity extends AppCompatActivity {
                 return fragmentTitleList.get(position);
             }
             return "";
+        }
+    }
+    
+    /**
+     * 简化版个人中心Fragment - 在新MyFragment不可用时使用
+     */
+    public static class SimplePersonalFragment extends Fragment {
+        
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            LinearLayout layout = new LinearLayout(getContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.setPadding(dp(20), dp(40), dp(20), dp(40));
+            layout.setBackgroundColor(Color.parseColor("#F8F8F8"));
+            
+            // 模拟个人中心的基本结构
+            
+            // 用户信息区域
+            LinearLayout userInfoCard = createSimpleCard();
+            userInfoCard.setPadding(dp(20), dp(30), dp(20), dp(30));
+            
+            TextView userIcon = new TextView(getContext());
+            userIcon.setText("👤");
+            userIcon.setTextSize(40);
+            userIcon.setGravity(android.view.Gravity.CENTER);
+            
+            TextView userName = new TextView(getContext());
+            userName.setText("湘湘用户");
+            userName.setTextSize(18);
+            userName.setTextColor(Color.parseColor("#484D61"));
+            userName.setTypeface(null, android.graphics.Typeface.BOLD);
+            userName.setGravity(android.view.Gravity.CENTER);
+            userName.setPadding(0, dp(10), 0, dp(5));
+            
+            TextView userStatus = new TextView(getContext());
+            userStatus.setText("个人中心开发中...");
+            userStatus.setTextSize(14);
+            userStatus.setTextColor(Color.parseColor("#9CA3AF"));
+            userStatus.setGravity(android.view.Gravity.CENTER);
+            
+            userInfoCard.addView(userIcon);
+            userInfoCard.addView(userName);
+            userInfoCard.addView(userStatus);
+            
+            // 功能提示
+            LinearLayout tipsCard = createSimpleCard();
+            tipsCard.setPadding(dp(20), dp(20), dp(20), dp(20));
+            
+            TextView tipsTitle = new TextView(getContext());
+            tipsTitle.setText("💡 开发提示");
+            tipsTitle.setTextSize(16);
+            tipsTitle.setTextColor(Color.parseColor("#484D61"));
+            tipsTitle.setTypeface(null, android.graphics.Typeface.BOLD);
+            
+            TextView tipsDesc = new TextView(getContext());
+            tipsDesc.setText("完整的个人中心功能正在开发中\n包括：用户信息、便捷功能、通知公告等");
+            tipsDesc.setTextSize(14);
+            tipsDesc.setTextColor(Color.parseColor("#6B7280"));
+            tipsDesc.setPadding(0, dp(10), 0, 0);
+            tipsDesc.setLineSpacing(dp(4), 1.0f);
+            
+            tipsCard.addView(tipsTitle);
+            tipsCard.addView(tipsDesc);
+            
+            layout.addView(userInfoCard);
+            layout.addView(tipsCard);
+            
+            return layout;
+        }
+        
+        private LinearLayout createSimpleCard() {
+            LinearLayout card = new LinearLayout(getContext());
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setBackgroundColor(Color.WHITE);
+            
+            // 简单的圆角效果
+            android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+            bg.setCornerRadius(dp(12));
+            bg.setColor(Color.WHITE);
+            bg.setStroke(dp(1), Color.parseColor("#E5E7EB"));
+            card.setBackground(bg);
+            
+            LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            cardParams.setMargins(0, 0, 0, dp(16));
+            card.setLayoutParams(cardParams);
+            
+            return card;
+        }
+        
+        private int dp(int dp) {
+            float density = getResources().getDisplayMetrics().density;
+            return Math.round(dp * density);
         }
     }
     
