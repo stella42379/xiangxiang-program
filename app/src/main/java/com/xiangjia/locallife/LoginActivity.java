@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,22 +28,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 优化后的登录Activity - 修复Lambda变量捕获问题
+ * 优化后的登录Activity - 修复类型转换问题
  * 参考小程序UI设计，集成数据库功能
  */
 public class LoginActivity extends AppCompatActivity {
     
     private static final String TAG = "LoginActivity";
     
-    // UI组件
+    // UI组件 - 🔧 修复：使用正确的类型
     private TextInputLayout usernameLayout;
     private TextInputLayout passwordLayout;
     private TextInputEditText usernameEditText;
     private TextInputEditText passwordEditText;
     private MaterialButton loginButton;
     private MaterialButton wechatLoginButton;
-    private MaterialButton registerButton;
-    private MaterialButton skipButton;
+    private TextView registerTextView;  // 🔧 改为TextView
+    private TextView skipTextView;      // 🔧 改为TextView
     private MaterialCheckBox agreementCheckBox;
     
     // 数据库相关
@@ -104,17 +105,24 @@ public class LoginActivity extends AppCompatActivity {
     }
     
     /**
-     * 初始化视图组件
+     * 初始化视图组件 - 🔧 修复类型转换问题
      */
     private void initViews() {
+        // 输入框
         usernameLayout = findViewById(R.id.til_username);
         passwordLayout = findViewById(R.id.til_password);
         usernameEditText = findViewById(R.id.et_username);
         passwordEditText = findViewById(R.id.et_password);
+        
+        // 按钮 - 确保类型正确
         loginButton = findViewById(R.id.btn_login);
         wechatLoginButton = findViewById(R.id.btn_wechat_login);
-        registerButton = findViewById(R.id.tv_register);
-        skipButton = findViewById(R.id.tv_skip_login);
+        
+        // 🔧 修复：这些应该是TextView，不是MaterialButton
+        registerTextView = findViewById(R.id.tv_register);
+        skipTextView = findViewById(R.id.tv_skip_login);
+        
+        // 复选框
         agreementCheckBox = findViewById(R.id.cb_agreement);
         
         // 检查必要组件
@@ -129,6 +137,8 @@ public class LoginActivity extends AppCompatActivity {
         if (agreementCheckBox != null) {
             agreementCheckBox.setChecked(true);
         }
+        
+        Log.d(TAG, "Views initialized successfully");
     }
     
     /**
@@ -136,21 +146,23 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         // 登录按钮
-        loginButton.setOnClickListener(v -> handleLogin());
+        if (loginButton != null) {
+            loginButton.setOnClickListener(v -> handleLogin());
+        }
         
         // 微信登录按钮
         if (wechatLoginButton != null) {
             wechatLoginButton.setOnClickListener(v -> handleWeChatLogin());
         }
         
-        // 注册按钮
-        if (registerButton != null) {
-            registerButton.setOnClickListener(v -> navigateToRegister());
+        // 注册文本按钮 - 🔧 修复：使用TextView的点击事件
+        if (registerTextView != null) {
+            registerTextView.setOnClickListener(v -> navigateToRegister());
         }
         
-        // 跳过登录按钮
-        if (skipButton != null) {
-            skipButton.setOnClickListener(v -> handleSkipLogin());
+        // 跳过登录文本按钮 - 🔧 修复：使用TextView的点击事件
+        if (skipTextView != null) {
+            skipTextView.setOnClickListener(v -> handleSkipLogin());
         }
     }
     

@@ -1,80 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- 湘湘管家基础主题 -->
-    <style name="Base.Theme.LocalLife" parent="Theme.Material3.DayNight">
-        <!-- 应用主色调 -->
+    
+    <!-- ========== 湘湘管家主题 - 修复ActionBar冲突 ========== -->
+    
+    <!-- 基础主题 - 使用NoActionBar避免冲突 -->
+    <style name="Theme.LocalLife" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 主色调 -->
         <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        
-        <!-- 背景色 -->
-        <item name="android:windowBackground">@color/main_background</item>
-        <item name="colorSurface">@color/card_background</item>
-        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent_color</item>
         
         <!-- 状态栏和导航栏 -->
-        <item name="android:statusBarColor">@color/primary_color</item>
-        <item name="android:navigationBarColor">@color/main_background</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="android:windowLightStatusBar">false</item>
         
-        <!-- 文本颜色 -->
-        <item name="colorOnSecondary">@color/text_secondary</item>
+        <!-- 背景色 -->
+        <item name="android:windowBackground">@color/background_primary</item>
+        <item name="colorSurface">@color/background_primary</item>
+        <item name="colorOnSurface">@color/text_primary</item>
         
-        <!-- 按钮样式 -->
-        <item name="materialButtonStyle">@style/XiangJia.Button.Primary</item>
-    </style>
-
-    <!-- 应用主题 -->
-    <style name="Theme.LocalLife" parent="Base.Theme.LocalLife" />
-    
-    <!-- 湘湘管家无ActionBar主题（用于MainActivity） -->
-    <style name="XiangJiaTheme.NoActionBar" parent="Theme.LocalLife">
+        <!-- Material Design 3 颜色 -->
+        <item name="colorOnPrimary">@color/text_white</item>
+        <item name="colorSecondary">@color/primary_light</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        
+        <!-- 确保没有ActionBar冲突 -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    
+    <!-- 登录页面专用主题 -->
+    <style name="Theme.LocalLife.Login" parent="Theme.LocalLife">
+        <!-- 登录页面全屏显示 -->
         <item name="android:windowFullscreen">false</item>
-        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
     
-    <!-- 湘湘管家按钮样式 -->
-    <style name="XiangJia.Button.Primary" parent="Widget.Material3.Button">
+    <!-- 注册页面专用主题 -->
+    <style name="Theme.LocalLife.Register" parent="Theme.LocalLife">
+        <!-- 注册页面使用自定义Toolbar -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    
+    <!-- 主页面主题 -->
+    <style name="Theme.LocalLife.Main" parent="Theme.LocalLife">
+        <!-- 主页面配置 -->
+        <item name="android:statusBarColor">@color/background_primary</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+    
+    <!-- ========== 兼容Material Components (M2) ========== -->
+    
+    <!-- 如果项目使用Material Components而不是Material3 -->
+    <style name="Theme.LocalLife.MaterialComponents" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent_color</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
+        <item name="android:windowBackground">@color/background_primary</item>
+        
+        <!-- 确保没有ActionBar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    
+    <!-- ========== 特殊页面主题 ========== -->
+    
+    <!-- 论坛页面主题 -->
+    <style name="Theme.LocalLife.Forum" parent="Theme.LocalLife">
+        <item name="android:statusBarColor">@color/background_secondary</item>
+    </style>
+    
+    <!-- 新闻详情页主题 -->
+    <style name="Theme.LocalLife.NewsDetail" parent="Theme.LocalLife">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    
+    <!-- ========== AppBarLayout和Toolbar样式 ========== -->
+    
+    <!-- AppBar主题 -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.Material3.ActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnPrimary">@color/text_white</item>
+    </style>
+    
+    <!-- Popup主题 -->
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Light">
+        <item name="colorSurface">@color/background_primary</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+    </style>
+    
+    <!-- ========== 按钮样式 ========== -->
+    
+    <!-- 主要按钮样式 -->
+    <style name="Widget.LocalLife.Button" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/primary_color</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="cornerRadius">8dp</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="cornerRadius">12dp</item>
     </style>
     
-    <!-- 湘湘管家卡片样式 -->
-    <style name="XiangJia.Card" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">8dp</item>
-        <item name="cardBackgroundColor">@color/card_background</item>
-        <item name="android:layout_margin">8dp</item>
+    <!-- 次要按钮样式 -->
+    <style name="Widget.LocalLife.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/primary_color</item>
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="cornerRadius">12dp</item>
     </style>
     
-    <!-- 湘湘管家输入框样式 -->
-    <style name="XiangJia.EditText" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+    <!-- ========== 输入框样式 ========== -->
+    
+    <!-- TextInputLayout样式 -->
+    <style name="Widget.LocalLife.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/primary_color</item>
-        <item name="boxCornerRadiusTopStart">8dp</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="boxCornerRadiusBottomStart">8dp</item>
-        <item name="boxCornerRadiusBottomEnd">8dp</item>
-        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="hintTextColor">@color/input_hint</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
     </style>
-    
-    <!-- 工具栏样式 -->
-    <style name="XiangJia.Toolbar" parent="Widget.Material3.Toolbar">
-        <item name="android:background">@color/primary_color</item>
-        <item name="titleTextColor">@android:color/white</item>
-        <item name="android:elevation">4dp</item>
+
+    <!-- 基础主题：无系统 ActionBar，方便用自定义 Toolbar -->
+    <style name="XiangJiaTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 这些是你之前缺的颜色位，可以用属性或你自定义的颜色 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+
+        <!-- 浅色图标/文字开关，按你的深浅色需求改 -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
-    
-    <!-- 底部导航样式 -->
-    <style name="XiangJia.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemIconTint">@color/bottom_nav_color_selector</item>
-        <item name="itemTextColor">@color/bottom_nav_color_selector</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:elevation">8dp</item>
-    </style>
+
+    <!-- 给 Manifest 用的那个名字，直接继承上面的主题 -->
+    <style name="XiangJiaTheme.NoActionBar" parent="@style/XiangJiaTheme"/>
 </resources>

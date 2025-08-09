@@ -23,6 +23,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.xiangjia.locallife.MainActivity;
 import com.xiangjia.locallife.model.NotificationItem;
 import com.xiangjia.locallife.model.UserInfo;
 import com.xiangjia.locallife.util.NotificationManager;
@@ -31,7 +32,7 @@ import com.xiangjia.locallife.util.UserManager;
 import java.util.List;
 
 /**
- * 个人中心Fragment - 完整版本，集成所有功能
+ * 个人中心Fragment - 完整版本，集成所有功能 + 退出登录按钮
  * 与小程序my页面完全一致，包含用户信息、便捷功能、通知公告
  */
 public class MyFragment extends Fragment {
@@ -110,6 +111,9 @@ public class MyFragment extends Fragment {
         
         // 4. 通知公告区域
         createNotificationsSection();
+        
+        // 🆕 5. 退出登录区域
+        createLogoutSection();
         
         scrollView.addView(mainContainer);
         swipeRefreshLayout.addView(scrollView);
@@ -332,6 +336,124 @@ public class MyFragment extends Fragment {
         notificationsContainer.addView(notificationsList);
         notificationsCard.addView(notificationsContainer);
         mainContainer.addView(notificationsCard);
+    }
+    
+    /**
+     * 🆕 5. 创建退出登录区域
+     */
+    private void createLogoutSection() {
+        CardView logoutCard = createGlassCard();
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        cardParams.setMargins(dp(20), dp(8), dp(20), dp(16));
+        logoutCard.setLayoutParams(cardParams);
+        
+        LinearLayout logoutContainer = new LinearLayout(getContext());
+        logoutContainer.setOrientation(LinearLayout.VERTICAL);
+        logoutContainer.setPadding(dp(24), dp(20), dp(24), dp(24));
+        
+        // 退出登录按钮
+        TextView logoutButton = createLogoutButton();
+        logoutContainer.addView(logoutButton);
+        
+        logoutCard.addView(logoutContainer);
+        mainContainer.addView(logoutCard);
+    }
+    
+    /**
+     * 创建退出登录按钮
+     */
+    private TextView createLogoutButton() {
+        TextView logoutBtn = new TextView(getContext());
+        logoutBtn.setText("🚪 退出登录");
+        logoutBtn.setTextSize(16);
+        logoutBtn.setTextColor(Color.parseColor("#EF4444"));
+        logoutBtn.setTypeface(null, android.graphics.Typeface.BOLD);
+        logoutBtn.setGravity(android.view.Gravity.CENTER);
+        logoutBtn.setPadding(dp(24), dp(16), dp(24), dp(16));
+        
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        logoutBtn.setLayoutParams(buttonParams);
+        
+        // 按钮背景样式
+        GradientDrawable buttonBg = new GradientDrawable();
+        buttonBg.setCornerRadius(dp(12));
+        buttonBg.setColor(Color.parseColor("#FEF2F2"));
+        buttonBg.setStroke(dp(2), Color.parseColor("#FECACA"));
+        logoutBtn.setBackground(buttonBg);
+        
+        // 点击事件
+        logoutBtn.setOnClickListener(v -> {
+            animateClick(logoutBtn);
+            showLogoutConfirmDialog();
+        });
+        
+        return logoutBtn;
+    }
+    
+    /**
+     * 显示退出登录确认对话框
+     */
+    private void showLogoutConfirmDialog() {
+        // 创建简单的确认提示
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+            .setTitle("退出登录")
+            .setMessage("确定要退出登录吗？")
+            .setPositiveButton("确定", (dialog, which) -> {
+                performLogout();
+            })
+            .setNegativeButton("取消", (dialog, which) -> {
+                dialog.dismiss();
+            })
+            .show();
+    }
+    
+    /**
+     * 执行退出登录
+     */
+    private void performLogout() {
+        try {
+            // 显示退出中的提示
+            Toast.makeText(getContext(), "正在退出登录...", Toast.LENGTH_SHORT).show();
+            
+            // 调用MainActivity的退出登录方法
+            if (getActivity() instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.logout();
+            } else {
+                Log.w(TAG, "无法获取MainActivity实例，尝试其他退出方式");
+                // 备用退出方式
+                performFallbackLogout();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "退出登录失败", e);
+            Toast.makeText(getContext(), "退出登录失败，请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    /**
+     * 备用退出登录方式
+     */
+    private void performFallbackLogout() {
+        try {
+            // 使用SharedPrefsUtil直接清除登录状态
+            com.xiangjia.locallife.util.SharedPrefsUtil.clearUserInfo(getContext());
+            
+            // 重启应用
+            android.content.Intent intent = new android.content.Intent(getContext(), com.xiangjia.locallife.LoginActivity.class);
+            intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "备用退出登录也失败", e);
+            Toast.makeText(getContext(), "退出登录失败", Toast.LENGTH_SHORT).show();
+        }
     }
     
     /**

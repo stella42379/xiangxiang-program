@@ -183,4 +183,8 @@
     <color name="colorOnPrimary">@color/text_white</color>
     <color name="colorOnSurface">@color/text_primary</color>
     <color name="colorOnBackground">@color/text_primary</color>
+
+    <!-- 你想要的状态栏/导航栏颜色；先给个安全默认 -->
+    <color name="status_bar">#000000</color>
+    <color name="navigation_bar">#000000</color>
 </resources>
