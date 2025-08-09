@@ -67,7 +67,7 @@
         <activity 
             android:name=".ui.activity.PostDetailActivity"
             android:label="帖子详情"
-            android:theme="@style/Theme.LocalLife"
+            android:theme="@style/XiangJiaTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"
             android:exported="false">
