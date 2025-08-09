@@ -7,17 +7,25 @@ import com.xiangjia.locallife.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * 论坛数据生成器
- * 用于生成满足课程要求的2500+条测试数据
- * 实现Task2设计要求和6442课程要求的DataFiles特性
+ * 论坛数据生成器（防崩溃稳定版）
+ * - 修复：int 溢出导致 nextInt(bound) 传入负数的问题
+ * - 加强：所有随机索引/边界统一安全处理；列表/数组为空时兜底
+ * - 目标：满足课程 2500+ 测试数据且稳定不崩
  */
 public class ForumDataGenerator {
-    
+
     private static final Random random = new Random();
-    
-    // 用户名列表
+
+    // ---- 常量（使用 long 防溢出） ----
+    private static final long MILLIS_PER_SECOND = 1000L;
+    private static final long MILLIS_PER_MINUTE = 60L * MILLIS_PER_SECOND;
+    private static final long MILLIS_PER_HOUR   = 60L * MILLIS_PER_MINUTE;
+    private static final long MILLIS_PER_DAY    = 24L * MILLIS_PER_HOUR;
+
+    // ---- 模板数据 ----
     private static final String[] USERNAMES = {
         "张三", "李四", "王五", "赵六", "钱七", "孙八", "周九", "吴十",
         "陈小明", "刘小红", "黄小华", "林小美", "郑小强", "何小丽", "朱小军",
@@ -25,8 +33,7 @@ public class ForumDataGenerator {
         "爱心志愿者", "资深住户", "新手妈妈", "退休大爷", "大学生小李", "上班族小王",
         "community_lover", "neighborhood_friend", "helpful_neighbor", "kind_resident"
     };
-    
-    // 帖子标题模板
+
     private static final String[] POST_TITLES = {
         "求助：小区停车位问题如何解决？",
         "分享：今天在小区里发现的美景",
@@ -49,8 +56,7 @@ public class ForumDataGenerator {
         "求助：寻找走失的小猫",
         "讨论：如何让社区更和谐"
     };
-    
-    // 帖子内容模板
+
     private static final String[] POST_CONTENTS = {
         "最近小区的停车位越来越紧张了，很多时候回家都找不到地方停车。大家有什么好的建议吗？是不是应该向物业反映一下这个问题？",
         "今天早上出门的时候，看到小区花园里樱花开得正盛，真的很美。春天的气息扑面而来，心情瞬间变好了。分享几张照片给大家看看。",
@@ -73,117 +79,95 @@ public class ForumDataGenerator {
         "我家的小猫昨天晚上跑出去后就没回来，它是一只白色的波斯猫，很亲人。如果有人看到请联系我，重金酬谢！",
         "如何让我们的社区更加和谐？我觉得需要大家都积极参与，互相理解，多一些包容和耐心。欢迎大家畅所欲言。"
     };
-    
-    // 回复内容模板
+
     private static final String[] REPLY_CONTENTS = {
-        "支持楼主的观点！",
-        "这个建议很不错，我赞同。",
-        "我也遇到过类似的问题。",
-        "感谢分享，很有用的信息。",
-        "楼主辛苦了，给你点赞！",
-        "我觉得还可以这样处理...",
-        "有道理，学习了。",
-        "楼主说得对，我们应该这样做。",
-        "这个方法我试过，确实有效。",
-        "谢谢楼主的提醒！",
-        "我也来分享一下我的经验。",
-        "这个问题确实需要重视。",
-        "楼主人真好，为你点赞！",
-        "我来帮顶一下这个帖子。",
-        "希望更多人能看到这个帖子。",
-        "楼主的照片拍得真好！",
-        "我也想参加这个活动。",
-        "有同样想法的可以联系我。",
-        "这个想法很有创意。",
-        "我们小区就是需要这样的人。",
-        "谢谢楼主的无私分享。",
-        "我也来说说我的看法。",
-        "楼主考虑得很周到。",
-        "这确实是个值得讨论的话题。",
-        "我举双手赞成！",
-        "楼主真是热心肠。",
-        "这种正能量需要传递下去。",
-        "我们都要向楼主学习。",
-        "这个提议我支持。",
+        "支持楼主的观点！", "这个建议很不错，我赞同。", "我也遇到过类似的问题。", "感谢分享，很有用的信息。",
+        "楼主辛苦了，给你点赞！", "我觉得还可以这样处理...", "有道理，学习了。", "楼主说得对，我们应该这样做。",
+        "这个方法我试过，确实有效。", "谢谢楼主的提醒！", "我也来分享一下我的经验。", "这个问题确实需要重视。",
+        "楼主人真好，为你点赞！", "我来帮顶一下这个帖子。", "希望更多人能看到这个帖子。", "楼主的照片拍得真好！",
+        "我也想参加这个活动。", "有同样想法的可以联系我。", "这个想法很有创意。", "我们小区就是需要这样的人。",
+        "谢谢楼主的无私分享。", "我也来说说我的看法。", "楼主考虑得很周到。", "这确实是个值得讨论的话题。",
+        "我举双手赞成！", "楼主真是热心肠。", "这种正能量需要传递下去。", "我们都要向楼主学习。", "这个提议我支持。",
         "希望物业能够重视这个问题。"
     };
-    
-    // 分类列表
-    private static final String[] CATEGORIES = {
-        "discussion", "friends", "help", "share", "announcement"
-    };
-    
-    /**
-     * 生成测试用户数据
-     * @param count 用户数量
-     * @return 用户列表
-     */
+
+    private static final String[] CATEGORIES = { "discussion", "friends", "help", "share", "announcement" };
+
+    // ---- 安全工具方法 ----
+    private static int safeIndex(int size) {
+        if (size <= 0) return 0;
+        if (size == 1) return 0;
+        return random.nextInt(size); // size>=2
+    }
+
+    private static String pick(String[] arr, String fallback) {
+        if (arr == null || arr.length == 0) return fallback;
+        return arr[safeIndex(arr.length)];
+    }
+
+    private static long randMillis(long upperExclusive) {
+        if (upperExclusive <= 0L) return 0L;
+        return ThreadLocalRandom.current().nextLong(upperExclusive);
+    }
+
+    // ---- 生成用户 ----
     public static List<User> generateUsers(int count) {
         List<User> users = new ArrayList<>();
+        if (count < 2) count = 2; // 至少容纳两个课程测试账号
 
-        
-        
-        // 添加课程要求的测试账户
+        // 课程要求测试账户
         User testUser1 = new User("comp2100@anu.edu.au", "comp2100@anu.edu.au", "comp2100");
         testUser1.setNickname("COMP2100测试用户");
         testUser1.setUserRole("admin");
         users.add(testUser1);
-        
+
         User testUser2 = new User("comp6442@anu.edu.au", "comp6442@anu.edu.au", "comp6442");
         testUser2.setNickname("COMP6442测试用户");
         testUser2.setUserRole("admin");
         users.add(testUser2);
-        
-        // 生成其他用户
+
+        // 其它用户
         for (int i = 2; i < count; i++) {
-            String username = USERNAMES[random.nextInt(USERNAMES.length)] + i;
+            String base = pick(USERNAMES, "用户");
+            String username = base + i;
             String email = "user" + i + "@example.com";
             String password = "password123";
-            
+
             User user = new User(username, email, password);
             user.setNickname(username);
             user.setBio("这是用户" + username + "的个人简介");
             user.setLocation("社区" + (random.nextInt(10) + 1) + "号楼");
-            
-            // 随机设置用户统计数据
-            user.setPostCount(random.nextInt(50));
-            user.setMessageCount(random.nextInt(200));
-            user.setFriendCount(random.nextInt(30));
-            
-            // 随机设置在线状态
+
+            user.setPostCount(random.nextInt(50));     // 0~49
+            user.setMessageCount(random.nextInt(200)); // 0~199
+            user.setFriendCount(random.nextInt(30));   // 0~29
+
             user.setOnline(random.nextBoolean());
-            
-            // 随机设置用户角色
-            if (random.nextDouble() < 0.05) { // 5%概率为版主
+
+            if (random.nextDouble() < 0.05) {
                 user.setUserRole("moderator");
             }
-            
             users.add(user);
         }
-        
         return users;
     }
-    
-    /**
-     * 生成测试帖子数据
-     * @param users 用户列表
-     * @param count 帖子数量
-     * @return 帖子列表
-     */
+
+    // ---- 生成帖子 ----
     public static List<ForumPost> generatePosts(List<User> users, int count) {
         List<ForumPost> posts = new ArrayList<>();
-        
+        if (users == null || users.isEmpty() || count <= 0) return posts;
+
+        long now = System.currentTimeMillis();
+        long within30Days = 30L * MILLIS_PER_DAY;
+
         for (int i = 0; i < count; i++) {
-            User author = users.get(random.nextInt(users.size()));
-            String title = POST_TITLES[random.nextInt(POST_TITLES.length)];
-            String content = POST_CONTENTS[random.nextInt(POST_CONTENTS.length)];
-            String category = CATEGORIES[random.nextInt(CATEGORIES.length)];
-            
-            // 为标题添加序号使其唯一
-            if (i > 0) {
-                title = title + " (" + (i + 1) + ")";
-            }
-            
+            User author = users.get(safeIndex(users.size()));
+            String title = pick(POST_TITLES, "社区话题");
+            String content = pick(POST_CONTENTS, "欢迎大家讨论。");
+            String category = pick(CATEGORIES, "discussion");
+
+            if (i > 0) title = title + " (" + (i + 1) + ")";
+
             ForumPost post = new ForumPost(
                 author.getUserId(),
                 author.getNickname(),
@@ -191,173 +175,148 @@ public class ForumDataGenerator {
                 content,
                 category
             );
-            
-            // 随机设置发布时间（过去30天内）
-            long now = System.currentTimeMillis();
-            long randomTime = now - random.nextInt(30 * 24 * 60 * 60 * 1000); // 30天内随机时间
+
+            // 时间：过去 30 天内随机
+            long publishOffset = randMillis(within30Days);           // 0 ~ 30天
+            long randomTime = now - publishOffset;
             post.setTimestamp(randomTime);
-            post.setLastActivityTime(randomTime + random.nextInt(24 * 60 * 60 * 1000)); // 最后活动时间稍晚一些
-            
-            // 随机设置统计数据
-            post.setLikeCount(random.nextInt(100));
-            post.setReplyCount(random.nextInt(50));
-            post.setViewCount(random.nextInt(500) + post.getLikeCount() + post.getReplyCount());
-            
-            // 随机设置置顶状态（5%概率）
-            if (random.nextDouble() < 0.05) {
-                post.setPinned(true);
-            }
-            
-            // 随机添加标签
+
+            // 最后活动：发布时间后 0~24小时
+            long lastActOffset = randMillis(24L * MILLIS_PER_HOUR);  // 0 ~ 24h
+            post.setLastActivityTime(randomTime + lastActOffset);
+
+            // 统计
+            int likes = random.nextInt(100);
+            int replies = random.nextInt(50);
+            int views = random.nextInt(500) + likes + replies;
+            post.setLikeCount(likes);
+            post.setReplyCount(replies);
+            post.setViewCount(views);
+
+            // 置顶（5%）
+            if (random.nextDouble() < 0.05) post.setPinned(true);
+
+            // 标签（可选）
             if (random.nextBoolean()) {
                 String[] tags = {"热门", "精华", "新手", "求助", "分享", "讨论"};
-                post.setTags("[\"" + tags[random.nextInt(tags.length)] + "\"]");
+                String tag = pick(tags, "讨论");
+                post.setTags("[\"" + tag + "\"]");
             }
-            
+
             posts.add(post);
         }
-        
         return posts;
     }
-    
-    /**
-     * 生成测试消息数据
-     * @param users 用户列表
-     * @param posts 帖子列表
-     * @param avgMessagesPerPost 每个帖子平均消息数
-     * @return 消息列表
-     */
+
+    // ---- 生成消息 ----
     public static List<ForumMessage> generateMessages(List<User> users, List<ForumPost> posts, int avgMessagesPerPost) {
         List<ForumMessage> messages = new ArrayList<>();
-        
+        if (users == null || users.isEmpty() || posts == null || posts.isEmpty()) return messages;
+
+        long within7Days = 7L * MILLIS_PER_DAY;
+
         for (ForumPost post : posts) {
-            // 为每个帖子生成随机数量的回复
-            int messageCount = Math.max(1, random.nextInt(avgMessagesPerPost * 2));
-            
+            // 先算安全的上界，再调用 nextInt
+            int bound = Math.max(1, avgMessagesPerPost * 2);
+            int messageCount = random.nextInt(bound) + 1; // 至少 1 条
+
             for (int i = 0; i < messageCount; i++) {
-                User author = users.get(random.nextInt(users.size()));
-                String content = REPLY_CONTENTS[random.nextInt(REPLY_CONTENTS.length)];
-                
-                // 为回复内容添加一些变化
+                User author = users.get(safeIndex(users.size()));
+                String content = pick(REPLY_CONTENTS, "赞同。");
+
                 if (random.nextBoolean()) {
                     content = content + " 我觉得楼主说得很有道理。";
                 }
                 if (random.nextBoolean() && i > 0) {
-                    content = "@" + users.get(random.nextInt(users.size())).getNickname() + " " + content;
+                    content = "@" + users.get(safeIndex(users.size())).getNickname() + " " + content;
                 }
-                
+
                 ForumMessage message = new ForumMessage(
                     post.getPostId(),
                     author.getUserId(),
                     author.getNickname(),
                     content
                 );
-                
-                // 设置回复时间（在帖子发布时间之后）
+
                 long postTime = post.getTimestamp();
-                long replyTime = postTime + random.nextInt(7 * 24 * 60 * 60 * 1000); // 7天内随机时间
-                message.setTimestamp(replyTime);
-                
-                // 随机设置点赞数
+                long replyOffset = randMillis(within7Days);
+                message.setTimestamp(postTime + replyOffset);
+
                 message.setLikeCount(random.nextInt(20));
-                
-                // 检查是否为楼主回复
+
                 if (author.getUserId().equals(post.getAuthorId())) {
                     message.setAuthorReply(true);
                 }
-                
-                // 随机设置父消息ID（回复其他回复，20%概率）
-                if (i > 0 && random.nextDouble() < 0.2 && !messages.isEmpty()) {
-                    // 随机选择一个之前的消息作为父消息
+
+                // 20% 概率做楼中楼
+                if (i > 0 && random.nextDouble() < 0.2) {
+                    // 找到当前帖子的已生成消息
                     List<ForumMessage> postMessages = new ArrayList<>();
                     for (ForumMessage msg : messages) {
-                        if (msg.getPostId().equals(post.getPostId())) {
-                            postMessages.add(msg);
-                        }
+                        if (post.getPostId().equals(msg.getPostId())) postMessages.add(msg);
                     }
                     if (!postMessages.isEmpty()) {
-                        ForumMessage parentMessage = postMessages.get(random.nextInt(postMessages.size()));
-                        message.setParentMessageId(parentMessage.getMessageId());
+                        ForumMessage parent = postMessages.get(safeIndex(postMessages.size()));
+                        if (parent != null) {
+                            message.setParentMessageId(parent.getMessageId());
+                        }
                     }
                 }
-                
+
                 messages.add(message);
             }
         }
-        
         return messages;
     }
-    
-    /**
-     * 生成完整的论坛测试数据
-     * @return 包含用户、帖子、消息的数据集合
-     */
+
+    // ---- 组合数据 ----
     public static ForumDataSet generateCompleteForumData() {
-        // 生成500个用户
         List<User> users = generateUsers(500);
-        
-        // 生成1000个帖子
         List<ForumPost> posts = generatePosts(users, 1000);
-        
-        // 生成2000条回复消息
         List<ForumMessage> messages = generateMessages(users, posts, 2);
-        
         return new ForumDataSet(users, posts, messages);
     }
-    
-    /**
-     * 论坛数据集合类
-     */
+
+    // ---- 数据集 ----
     public static class ForumDataSet {
-        private List<User> users;
-        private List<ForumPost> posts;
-        private List<ForumMessage> messages;
-        
+        private final List<User> users;
+        private final List<ForumPost> posts;
+        private final List<ForumMessage> messages;
+
         public ForumDataSet(List<User> users, List<ForumPost> posts, List<ForumMessage> messages) {
-            this.users = users;
-            this.posts = posts;
-            this.messages = messages;
+            this.users = (users != null) ? users : new ArrayList<>();
+            this.posts = (posts != null) ? posts : new ArrayList<>();
+            this.messages = (messages != null) ? messages : new ArrayList<>();
         }
-        
+
         public List<User> getUsers() { return users; }
         public List<ForumPost> getPosts() { return posts; }
         public List<ForumMessage> getMessages() { return messages; }
-        
+
         public int getTotalDataCount() {
             return users.size() + posts.size() + messages.size();
         }
-        
+
         public String getDataSummary() {
-            return String.format("用户: %d, 帖子: %d, 消息: %d, 总计: %d", 
-                users.size(), posts.size(), messages.size(), getTotalDataCount());
+            return String.format("用户: %d, 帖子: %d, 消息: %d, 总计: %d",
+                    users.size(), posts.size(), messages.size(), getTotalDataCount());
         }
     }
-    
-    /**
-     * 生成随机用户名
-     */
+
+    // ---- 辅助随机生成 ----
     public static String generateRandomUsername() {
-        return USERNAMES[random.nextInt(USERNAMES.length)] + random.nextInt(1000);
+        return pick(USERNAMES, "用户") + random.nextInt(1000);
     }
-    
-    /**
-     * 生成随机帖子标题
-     */
+
     public static String generateRandomPostTitle() {
-        return POST_TITLES[random.nextInt(POST_TITLES.length)];
+        return pick(POST_TITLES, "社区话题");
     }
-    
-    /**
-     * 生成随机帖子内容
-     */
+
     public static String generateRandomPostContent() {
-        return POST_CONTENTS[random.nextInt(POST_CONTENTS.length)];
+        return pick(POST_CONTENTS, "欢迎大家交流。");
     }
-    
-    /**
-     * 生成随机回复内容
-     */
+
     public static String generateRandomReplyContent() {
-        return REPLY_CONTENTS[random.nextInt(REPLY_CONTENTS.length)];
+        return pick(REPLY_CONTENTS, "赞同。");
     }
 }
