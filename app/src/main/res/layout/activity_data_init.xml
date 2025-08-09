@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_gradient"
+    android:gravity="center"
+    android:padding="32dp"
+    tools:context=".ui.activity.DataInitActivity">
+
+    <!-- 标题 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="社区论坛"
+        android:textSize="32sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Community Forum"
+        android:textSize="16sp"
+        android:textColor="@color/white_70"
+        android:layout_marginBottom="48dp" />
+
+    <!-- 状态卡片 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/background_primary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center">
+
+            <!-- 状态图标 -->
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_database"
+                android:layout_marginBottom="16dp"
+                app:tint="@color/primary_color" />
+
+            <!-- 状态文本 -->
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="检查数据状态..."
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:gravity="center" />
+
+            <!-- 进度条 -->
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:progressTint="@color/primary_color"
+                android:visibility="gone" />
+
+            <!-- 数据摘要 -->
+            <TextView
+                android:id="@+id/tv_data_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="正在检查现有数据..."
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 操作按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_init_data"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="初始化数据"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            app:backgroundTint="@color/primary_color"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_download"
+            app:iconGravity="textStart" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_enter_forum"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入论坛"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:enabled="false"
+            app:strokeColor="@android:color/white"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconGravity="textEnd"
+            android:textColor="@android:color/white"
+            app:iconTint="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- 版权信息 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2024 Community Forum"
+        android:textSize="12sp"
+        android:textColor="@color/white_70"
+        android:layout_marginTop="32dp" />
+
+</LinearLayout>
+    

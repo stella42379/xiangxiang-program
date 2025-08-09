@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+
+
 /**
  * 日期工具类
  * 提供日期时间处理功能
@@ -13,6 +15,13 @@ import java.util.Locale;
 public class DateUtils {
     
     private static final String TAG = "DateUtils";
+    private static final long MINUTE_MILLIS = 60 * 1000L;
+    private static final long HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final long DAY_MILLIS = 24 * HOUR_MILLIS;
+    private static final long WEEK_MILLIS = 7 * DAY_MILLIS;
+    private static final long MONTH_MILLIS = 30 * DAY_MILLIS;
+    private static final long YEAR_MILLIS = 365 * DAY_MILLIS;
+
     
     // 常用日期格式
     public static final String FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
@@ -185,6 +194,88 @@ public class DateUtils {
     public static int getDaysBetween(long timestamp1, long timestamp2) {
         long diff = Math.abs(timestamp1 - timestamp2);
         return (int) (diff / (24 * 60 * 60 * 1000));
+    }
+
+    /**
+     * 格式化相对时间 (如：刚刚、5分钟前、1小时前等)
+     */
+    public static String formatRelativeTime(long timestamp) {
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+        
+        if (diff < 0) {
+            return "刚刚";
+        }
+        
+        if (diff < MINUTE_MILLIS) {
+            return "刚刚";
+        } else if (diff < HOUR_MILLIS) {
+            long minutes = diff / MINUTE_MILLIS;
+            return minutes + "分钟前";
+        } else if (diff < DAY_MILLIS) {
+            long hours = diff / HOUR_MILLIS;
+            return hours + "小时前";
+        } else if (diff < WEEK_MILLIS) {
+            long days = diff / DAY_MILLIS;
+            return days + "天前";
+        } else if (diff < MONTH_MILLIS) {
+            long weeks = diff / WEEK_MILLIS;
+            return weeks + "周前";
+        } else if (diff < YEAR_MILLIS) {
+            long months = diff / MONTH_MILLIS;
+            return months + "个月前";
+        } else {
+            long years = diff / YEAR_MILLIS;
+            return years + "年前";
+        }
+    }
+    
+    /**
+     * 格式化日期时间 (yyyy-MM-dd HH:mm:ss)
+     */
+    public static String formatDateTime(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date(timestamp));
+    }
+    
+    /**
+     * 格式化日期 (yyyy-MM-dd)
+     */
+    public static String formatDate(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date(timestamp));
+    }
+    
+    /**
+     * 格式化时间 (HH:mm)
+     */
+    public static String formatTime(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(new Date(timestamp));
+    }
+    
+    /**
+     * 格式化聊天时间 (今天显示时间，昨天显示"昨天"，更早显示日期)
+     */
+    public static String formatChatTime(long timestamp) {
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+        
+        if (diff < DAY_MILLIS) {
+            // 今天
+            return formatTime(timestamp);
+        } else if (diff < 2 * DAY_MILLIS) {
+            // 昨天
+            return "昨天 " + formatTime(timestamp);
+        } else if (diff < WEEK_MILLIS) {
+            // 本周
+            SimpleDateFormat sdf = new SimpleDateFormat("E HH:mm", Locale.getDefault());
+            return sdf.format(new Date(timestamp));
+        } else {
+            // 更早
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
+            return sdf.format(new Date(timestamp));
+        }
     }
     
     /**

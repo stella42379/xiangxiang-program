@@ -37,4 +37,82 @@
 
     <!-- 底部导航高度 -->
     <dimen name="bottom_navigation_height">56dp</dimen>
+    
+    <!-- ============ 新闻模块专用尺寸 ============ -->
+    
+    <!-- 新闻间距 -->
+    <dimen name="news_spacing_tiny">4dp</dimen>
+    <dimen name="news_spacing_small">8dp</dimen>
+    <dimen name="news_spacing_medium">16dp</dimen>
+    <dimen name="news_spacing_large">24dp</dimen>
+    <dimen name="news_spacing_huge">32dp</dimen>
+    
+    <!-- 新闻圆角 -->
+    <dimen name="news_corner_radius_small">8dp</dimen>
+    <dimen name="news_corner_radius_medium">12dp</dimen>
+    <dimen name="news_corner_radius_large">16dp</dimen>
+    <dimen name="news_corner_radius_huge">24dp</dimen>
+    
+    <!-- 新闻文字大小 -->
+    <dimen name="news_text_size_small">12sp</dimen>
+    <dimen name="news_text_size_medium">14sp</dimen>
+    <dimen name="news_text_size_large">16sp</dimen>
+    <dimen name="news_text_size_title">18sp</dimen>
+    <dimen name="news_text_size_headline">20sp</dimen>
+    <dimen name="news_text_size_banner">32sp</dimen>
+    
+    <!-- 新闻相关尺寸 -->
+    <dimen name="news_thumbnail_width">80dp</dimen>
+    <dimen name="news_thumbnail_height">60dp</dimen>
+    <dimen name="carousel_height">200dp</dimen>
+    <dimen name="carousel_height_mobile">160dp</dimen>
+    <dimen name="news_detail_image_height">200dp</dimen>
+    
+    <!-- 新闻状态栏 -->
+    <dimen name="news_status_bar_height">48dp</dimen>
+    <dimen name="news_top_nav_height">80dp</dimen>
+    
+    <!-- 新闻轮播相关 -->
+    <dimen name="carousel_nav_button_size">32dp</dimen>
+    <dimen name="carousel_dot_size">6dp</dimen>
+    <dimen name="carousel_dot_active_size">8dp</dimen>
+    <dimen name="carousel_dot_spacing">6dp</dimen>
+    
+    <!-- 新闻卡片 -->
+    <dimen name="news_card_elevation">8dp</dimen>
+    <dimen name="news_card_margin">16dp</dimen>
+    <dimen name="news_card_padding">20dp</dimen>
+    
+    <!-- 新闻详情页 -->
+    <dimen name="news_detail_header_height">88dp</dimen>
+    <dimen name="news_detail_content_padding">20dp</dimen>
+    <dimen name="news_detail_margin_top">60dp</dimen>
+    
+    <!-- 新闻图标尺寸 -->
+    <dimen name="news_icon_small">16dp</dimen>
+    <dimen name="news_icon_medium">24dp</dimen>
+    <dimen name="news_icon_large">32dp</dimen>
+    <dimen name="news_source_icon_size">16dp</dimen>
+    
+    <!-- 新闻按钮尺寸 -->
+    <dimen name="news_fab_size">40dp</dimen>
+    <dimen name="news_action_button_size">48dp</dimen>
+    
+    <!-- 新闻分割线和边框 -->
+    <dimen name="news_divider_height">1dp</dimen>
+    <dimen name="news_border_width">1dp</dimen>
+    <dimen name="news_accent_bar_width">4dp</dimen>
+    <dimen name="news_accent_bar_height">20dp</dimen>
+    
+    <!-- 新闻列表项高度 -->
+    <dimen name="news_item_height">84dp</dimen>
+    <dimen name="news_item_padding">12dp</dimen>
+    
+    <!-- 新闻加载状态 -->
+    <dimen name="news_loading_padding">40dp</dimen>
+    <dimen name="news_empty_padding">40dp</dimen>
+    
+    <!-- 新闻轮播指示器 -->
+    <dimen name="carousel_indicator_margin">16dp</dimen>
+    <dimen name="carousel_indicator_bottom_margin">20dp</dimen>
 </resources>

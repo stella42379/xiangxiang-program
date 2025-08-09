@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 搜索 -->
+    <item
+        android:id="@+id/action_search"
+        android:title="搜索"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <!-- 刷新 -->
+    <item
+        android:id="@+id/action_refresh"
+        android:title="刷新"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="ifRoom" />
+
+    <!-- 我的帖子 (使用现有的ic_person图标) -->
+    <item
+        android:id="@+id/action_my_posts"
+        android:title="我的帖子"
+        android:icon="@drawable/ic_person"
+        app:showAsAction="never" />
+
+    <!-- 好友列表 (使用现有的ic_people图标) -->
+    <item
+        android:id="@+id/action_friends"
+        android:title="好友列表"
+        android:icon="@drawable/ic_people"
+        app:showAsAction="never" />
+
+    <!-- 设置 (使用现有的ic_settings图标) -->
+    <item
+        android:id="@+id/action_settings"
+        android:title="设置"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never" />
+
+</menu>

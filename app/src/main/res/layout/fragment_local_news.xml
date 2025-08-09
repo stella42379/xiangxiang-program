@@ -1,125 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background">
+    android:background="@drawable/bg_news_page">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <!-- 背景图片 -->
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_news_gradient"
+        android:alpha="0.8" />
 
-        <!-- 新闻标题栏 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
         <LinearLayout
-            android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:background="@color/primary_color"
-            android:gravity="center_vertical">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="今日时讯"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <!-- 顶部透明导航栏 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@android:color/transparent" />
 
-            <ImageButton
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
+            <!-- 状态栏 -->
+            <LinearLayout
+                android:id="@+id/status_bar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_glass_status_bar"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/current_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="12:34"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <!-- 页面主标题区域 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_search"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:tint="@android:color/white" />
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/news_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="今日时讯"
+                    android:textColor="@color/text_primary"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/news_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0.7"
+                    android:fontFamily="sans-serif"
+                    android:text="Local News"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <!-- 新闻轮播区域 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <!-- 轮播容器 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="8dp">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/carousel_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- 轮播指示器 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carousel_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
+
+            <!-- 新闻列表区域 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- 列表标题 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="最新资讯"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- 下拉刷新 + 新闻列表 -->
+                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/swipe_refresh_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/news_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false" />
+
+                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+                    <!-- 加载进度条 -->
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="40dp"
+                        android:visibility="gone" />
+
+                    <!-- 空状态文本 -->
+                    <TextView
+                        android:id="@+id/empty_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="40dp"
+                        android:drawableTop="@drawable/ic_news_empty"
+                        android:drawablePadding="16dp"
+                        android:gravity="center"
+                        android:text="暂无新闻\n下拉刷新试试"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <!-- 底部占位 -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:text="—— 已显示全部内容 ——"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
-        <!-- 新闻分类标签 -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/news_category_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_layout"
-            android:background="@android:color/white"
-            app:tabMode="scrollable"
-            app:tabIndicatorColor="@color/primary_color"
-            app:tabSelectedTextColor="@color/primary_color"
-            app:tabTextColor="@color/text_secondary" />
+    </ScrollView>
 
-        <!-- 新闻列表 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/news_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="120dp"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_news" />
-
-        <!-- 空状态视图 -->
-        <LinearLayout
-            android:id="@+id/empty_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_empty_news"
-                android:alpha="0.5" />
-
-            <TextView
-                android:id="@+id/empty_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="暂无新闻内容"
-                android:textSize="16sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="16dp" />
-
-            <Button
-                android:id="@+id/btn_retry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="重试"
-                android:textColor="@color/primary_color"
-                android:background="@drawable/retry_button_background"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="8dp" />
-
-        </LinearLayout>
-
-        <!-- 加载指示器 -->
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <!-- 浮动操作按钮 -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_refresh"
-            app:backgroundTint="@color/primary_color"
-            app:tint="@android:color/white" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</FrameLayout>

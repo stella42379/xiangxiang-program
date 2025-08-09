@@ -2,15 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- 位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- WiFi和蓝牙权限 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    
+    <!-- 系统权限 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    
+    <!-- 电话权限 -->
     <uses-permission
         android:name="android.permission.CALL_PHONE"
         tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
@@ -25,59 +35,206 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocalLife"
         tools:targetApi="31">
-        
-        <!-- 将MainActivity设为启动Activity -->
+
+        <!-- 主Activity - 应用启动入口 -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ========== 论坛相关Activity ========== -->
         
-        <!-- LoginActivity改为普通Activity -->
+        <!-- 论坛主页 (独立Activity，可选) -->
+        <activity 
+            android:name=".ui.activity.ForumActivity"
+            android:label="社区论坛"
+            android:theme="@style/Theme.LocalLife"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- 帖子详情页 -->
+        <activity 
+            android:name=".ui.activity.PostDetailActivity"
+            android:label="帖子详情"
+            android:theme="@style/Theme.LocalLife"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- 创建帖子页 -->
+        <activity 
+            android:name=".ui.activity.CreatePostActivity"
+            android:label="发表帖子"
+            android:theme="@style/Theme.LocalLife"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- 数据初始化页 -->
+        <activity 
+            android:name=".ui.activity.DataInitActivity"
+            android:label="数据初始化"
+            android:theme="@style/Theme.LocalLife"
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <!-- 可以通过deep link启动数据初始化 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="locallife" android:host="init" />
+            </intent-filter>
+        </activity>
+
+        <!-- ========== 新闻相关Activity ========== -->
+        
+        <!-- 新闻详情页 -->
+        <activity
+            android:name=".ui.activity.NewsDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/XiangJiaTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
+            
+            <!-- 添加返回导航支持 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+                
+            <!-- 支持从其他应用分享新闻链接 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="news.locallife.com" />
+                <data android:scheme="https" android:host="news.locallife.com" />
+            </intent-filter>
+        </activity>
+
+        <!-- ========== 用户相关Activity ========== -->
+        
+        <!-- 登录页面 -->
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
             
+        <!-- 注册页面 -->
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
-            
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+
+        <!-- ========== 地址管理相关Activity ========== -->
+        
+        <!-- 添加家庭地址 -->
         <activity
             android:name=".AddHomeAddressActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 添加地址 -->
         <activity
             android:name=".AddAddressActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 添加电话 -->
         <activity
             android:name=".AddTelActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+
+        <!-- ========== 功能页面Activity ========== -->
+        
+        <!-- 首页 (如果有独立的首页Activity) -->
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 设置页面 -->
         <activity
             android:name=".SettingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 厕所页面 -->
         <activity
             android:name=".WcActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 医院页面 -->
         <activity
             android:name=".HospitalActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- 超市页面 -->
         <activity
             android:name=".SupermarketActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
+            
+        <!-- GPS导航页面 -->
         <activity 
             android:name=".GPSNaviActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
 
+        <!-- ========== 服务和元数据配置 ========== -->
+
+        <!-- 高德地图API Key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="67a9bd63175390f94a773f385df88295" />
 
+        <!-- 高德定位服务 -->
         <service android:name="com.amap.api.location.APSService" />
+
+        <!-- File Provider (用于分享图片等文件) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

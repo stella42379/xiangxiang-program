@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@android:color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 帖子头部信息 -->
+        <LinearLayout
+            android:id="@+id/layout_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- 用户头像 -->
+            <ImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/default_avatar"
+                android:background="@drawable/bg_circle_avatar" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/tv_author_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    tools:text="用户名" />
+
+                <TextView
+                    android:id="@+id/tv_post_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="2dp"
+                    tools:text="5分钟前" />
+
+            </LinearLayout>
+
+            <!-- 置顶标识 -->
+            <ImageView
+                android:id="@+id/iv_pinned"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_pin"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp"
+                app:tint="@color/accent" />
+
+            <!-- 分类标签 -->
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_category_default"
+                android:padding="4dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                tools:text="讨论" />
+
+        </LinearLayout>
+
+        <!-- 帖子标题 -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="这是一个帖子标题，可能会很长需要换行显示" />
+
+        <!-- 帖子内容预览 -->
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="8dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:lineSpacingExtra="2dp"
+            tools:text="这是帖子的内容预览，会显示前几行文字内容，如果内容太长会被截断显示省略号..." />
+
+        <!-- 帖子图片 -->
+        <ImageView
+            android:id="@+id/iv_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_image_placeholder"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:src="@drawable/sample_image" />
+
+        <!-- 底部操作栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp">
+
+            <!-- 点赞 -->
+            <LinearLayout
+                android:id="@+id/layout_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_heart_outline"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tv_like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="4dp"
+                    tools:text="12" />
+
+            </LinearLayout>
+
+            <!-- 回复 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_comment"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tv_reply_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="4dp"
+                    tools:text="8" />
+
+            </LinearLayout>
+
+            <!-- 浏览数 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_visibility"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tv_view_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="4dp"
+                    tools:text="156" />
+
+            </LinearLayout>
+
+            <!-- 占位空间 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- 更多操作 -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_more_vert"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp"
+                app:tint="@color/text_secondary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

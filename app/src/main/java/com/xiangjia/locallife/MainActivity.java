@@ -16,9 +16,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.xiangjia.locallife.ui.fragment.MainPageFragment;
+import com.xiangjia.locallife.ui.fragment.LocalNewsFragment;
+import com.xiangjia.locallife.ui.fragment.DifyFragment;
+import com.xiangjia.locallife.ui.fragment.MyFragment;
+import com.xiangjia.locallife.ui.fragment.ForumFragment;
+
 
 /**
- * 简化版MainActivity - 专注于Tab导航，主页逻辑由MainPageFragment处理
+ * 湘湘管家主Activity - 完整版本，使用所有Fragment
  */
 public class MainActivity extends AppCompatActivity {
     
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentTabIndex = 0;
     
     // Tab配置 - 对应小程序的tabBar
-    private static final String[] TAB_TITLES = {"主页", "新闻", "AI助手", "个人中心"};
+    private static final String[] TAB_TITLES = {"主页", "今日时讯", "AI助手", "个人中心"};
     private static final String[] TAB_ICONS = {"🏠", "📰", "🤖", "👤"};
     
     @Override
@@ -88,13 +93,39 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager() {
         pagerAdapter = new MainPagerAdapter(this);
         
-        // 添加湘湘管家主页Fragment（使用专用资源文件的完整实现）
-        pagerAdapter.addFragment(new MainPageFragment(), TAB_TITLES[0]);
-        
-        // 添加其他Fragment（临时简单实现）
-        pagerAdapter.addFragment(new SimpleFragment("新闻资讯\n\n本地新闻和资讯信息"), TAB_TITLES[1]);
-        pagerAdapter.addFragment(new SimpleFragment("AI助手\n\n湘湘管家智能助手"), TAB_TITLES[2]);
-        pagerAdapter.addFragment(new SimpleFragment("个人中心\n\n个人信息和设置"), TAB_TITLES[3]);
+        // 安全地添加Fragment，避免崩溃
+        try {
+            // 主页Fragment - 使用简单版本避免复杂依赖
+            try {
+                pagerAdapter.addFragment(new MainPageFragment(), TAB_TITLES[0]);
+            } catch (Exception e) {
+                Log.w(TAG, "MainPageFragment创建失败，使用备用", e);
+                pagerAdapter.addFragment(new SimpleFragment("湘湘管家\n\n社区服务平台"), TAB_TITLES[0]);
+            }
+            
+            // 新闻Fragment - 使用安全版本
+            pagerAdapter.addFragment(new LocalNewsFragment(), TAB_TITLES[1]);
+            
+             // 论坛Fragment - 新增！
+             try {
+                pagerAdapter.addFragment(new ForumFragment(), TAB_TITLES[2]);
+                Log.d(TAG, "论坛Fragment添加成功");
+            } catch (Exception e) {
+                Log.w(TAG, "ForumFragment创建失败，使用备用", e);
+                pagerAdapter.addFragment(new SimpleFragment("社区论坛\n\n讨论和交友平台\n(正在加载...)"), TAB_TITLES[2]);
+            }
+            
+            // 个人中心Fragment - 暂时使用简单版本
+            pagerAdapter.addFragment(new SimpleFragment("个人中心\n\n个人信息和设置\n(开发中)"), TAB_TITLES[3]);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Fragment创建失败", e);
+            // 备用方案
+            pagerAdapter.addFragment(new SimpleFragment("湘湘管家\n\n主页"), TAB_TITLES[0]);
+            pagerAdapter.addFragment(new SimpleFragment("今日时讯\n\n加载中..."), TAB_TITLES[1]);
+            pagerAdapter.addFragment(new SimpleFragment("AI助手\n\n开发中"), TAB_TITLES[2]);
+            pagerAdapter.addFragment(new SimpleFragment("个人中心\n\n开发中"), TAB_TITLES[3]);
+        }
         
         viewPager.setAdapter(pagerAdapter);
         
@@ -105,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 currentTabIndex = position;
                 updateBottomNavigationSelection(position);
                 Log.d(TAG, "切换到页面: " + pagerAdapter.getTitle(position));
+
+                // 当切换到论坛页面时的特殊处理
+                if (position == 2) {
+                    Log.d(TAG, "用户进入论坛页面");
+                }
             }
         });
     }
@@ -155,6 +191,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setOnClickListener(v -> {
             if (currentTabIndex != index) {
                 viewPager.setCurrentItem(index, true);
+
+                // 论坛页面点击日志
+                if (index == 2) {
+                    Log.d(TAG, "用户点击论坛Tab");
+                }
             }
         });
         
@@ -261,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
     }
     
     /**
-     * 临时简单Fragment（后续替换为完整实现）
+     * 临时简单Fragment（用于开发中的功能）
      */
     public static class SimpleFragment extends Fragment {
         private String content;

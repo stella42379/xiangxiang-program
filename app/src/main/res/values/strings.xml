@@ -130,4 +130,107 @@
     <string name="news_image">新闻图片</string>
     <string name="arrow_right">右箭头</string>
     <string name="edit_profile">编辑资料</string>
+    
+    <!-- ============ 新闻模块专用字符串 ============ -->
+    
+    <!-- 新闻模块标题 -->
+    <string name="news_title">今日时讯</string>
+    <string name="news_subtitle">Local News</string>
+    <string name="latest_news">最新资讯</string>
+    <string name="news_detail">新闻详情</string>
+    <string name="featured_news">头条新闻</string>
+    
+    <!-- 新闻操作相关 -->
+    <string name="collect">收藏</string>
+    <string name="share">分享</string>
+    <string name="report">举报</string>
+    <string name="read_more">阅读更多</string>
+    <string name="read_more_arrow">Read more ›</string>
+    <string name="view_original">查看原文</string>
+    <string name="open_original_news">查看原始新闻</string>
+    
+    <!-- 新闻状态文本 -->
+    <string name="news_loading_more">正在加载更多新闻...</string>
+    <string name="news_refreshing">正在刷新...</string>
+    <string name="news_no_more">没有更多新闻了</string>
+    <string name="news_pull_to_refresh">下拉刷新试试</string>
+    <string name="news_load_failed">加载失败，请重试</string>
+    <string name="news_no_content">暂无新闻内容</string>
+    <string name="news_end_text">—— 已显示全部内容 ——</string>
+    
+    <!-- 新闻成功提示 -->
+    <string name="collect_success">收藏成功！</string>
+    <string name="already_collected">已经收藏过了！</string>
+    <string name="share_success">分享成功</string>
+    <string name="report_success">举报成功！感谢您的举报，我们会及时处理。</string>
+    <string name="link_copied">链接已复制到剪贴板！</string>
+    
+    <!-- 新闻分享相关 -->
+    <string name="share_to">分享到</string>
+    <string name="share_news_title">分享新闻</string>
+    <string name="share_content_template">%1$s - 来自%2$s</string>
+    <string name="browser_not_supported">您的浏览器不支持自动复制，请手动复制分享内容</string>
+    
+    <!-- 新闻举报相关 -->
+    <string name="report_reason_title">举报原因</string>
+    <string name="report_reason_false">内容不实</string>
+    <string name="report_reason_illegal">涉及违法</string>
+    <string name="report_reason_spam">垃圾信息</string>
+    <string name="report_reason_other">其他原因</string>
+    <string name="report_reason_prompt">请选择举报原因：\n1. 内容不实\n2. 涉及违法\n3. 垃圾信息\n4. 其他原因</string>
+    
+    <!-- 新闻详情页相关 -->
+    <string name="news_content_title">新闻内容</string>
+    <string name="news_source_title">新闻来源</string>
+    <string name="news_time_title">发布时间</string>
+    <string name="related_links">相关链接</string>
+    <string name="news_actions">操作</string>
+    <string name="unknown_source">未知来源</string>
+    <string name="no_original_link">暂无原始链接</string>
+    <string name="opening_external_link">正在打开...</string>
+    
+    <!-- 新闻确认对话框 -->
+    <string name="open_external_link_title">打开外部链接</string>
+    <string name="open_external_link_message">是否要打开原始新闻链接？</string>
+    <string name="confirm_report_title">确认举报</string>
+    <string name="confirm_report_message">确定要举报这条新闻吗？</string>
+    
+    <!-- 新闻空状态 -->
+    <string name="empty_news_title">暂无新闻</string>
+    <string name="empty_news_subtitle">下拉刷新试试</string>
+    <string name="empty_retry">重新加载</string>
+    
+    <!-- 新闻时间格式 -->
+    <string name="time_just_now">刚刚</string>
+    <string name="time_minutes_ago">%d分钟前</string>
+    <string name="time_hours_ago">%d小时前</string>
+    <string name="time_days_ago">%d天前</string>
+    <string name="time_format_today">今天 %s</string>
+    <string name="time_format_yesterday">昨天 %s</string>
+    <string name="time_format_date">%s</string>
+    
+    <!-- 新闻分类 -->
+    <string name="news_category_technology">科技</string>
+    <string name="news_category_traffic">交通</string>
+    <string name="news_category_environment">环保</string>
+    <string name="news_category_medical">医疗</string>
+    <string name="news_category_safety">安全</string>
+    <string name="news_category_general">综合</string>
+    
+    <!-- 新闻网络状态 -->
+    <string name="network_connected">网络已连接</string>
+    <string name="network_disconnected">网络已断开，请检查网络设置</string>
+    <string name="network_reconnecting">正在重新连接...</string>
+    
+    <!-- 新闻accessibility描述 -->
+    <string name="news_thumbnail_desc">新闻缩略图</string>
+    <string name="news_source_icon_desc">新闻来源图标</string>
+    <string name="carousel_image_desc">轮播新闻图片</string>
+    <string name="carousel_indicator_desc">轮播指示器</string>
+    <string name="news_action_collect_desc">收藏新闻</string>
+    <string name="news_action_share_desc">分享新闻</string>
+    <string name="news_action_report_desc">举报新闻</string>
+
+    <!-- AppBar滚动行为 -->
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

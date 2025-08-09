@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 草稿 -->
+    <item
+        android:id="@+id/action_draft"
+        android:title="保存草稿"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="never" />
+
+    <!-- 预览 -->
+    <item
+        android:id="@+id/action_preview"
+        android:title="预览"
+        android:icon="@drawable/ic_preview"
+        app:showAsAction="never" />
+
+</menu>

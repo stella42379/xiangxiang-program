@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="300dp"
+    android:viewportWidth="400"
+    android:viewportHeight="300">
+
+    <!-- 背景 -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M0,0h400v300h-400z" />
+
+    <!-- 报纸图标 -->
+    <group android:translateX="150" android:translateY="100">
+        <path
+            android:fillColor="#CCCCCC"
+            android:pathData="M80,20H20c-2.21,0 -4,1.79 -4,4v52c0,2.21 1.79,4 4,4h60c2.21,0 4,-1.79 4,-4V24c0,-2.21 -1.79,-4 -4,-4zM76,72H24V28h52v44z" />
+        <path
+            android:fillColor="#CCCCCC"
+            android:pathData="M28,32h20v8H28zM28,44h48v4H28zM28,52h48v4H28zM28,60h32v4H28z" />
+    </group>
+
+    <!-- 替代文字：用矩形模拟 -->
+    <path
+        android:fillColor="#999999"
+        android:pathData="M150,220h100v2h-100zM180,230h40v2h-40z" />
+
+</vector>

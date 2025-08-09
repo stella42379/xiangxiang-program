@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# 新闻模型类
+-keep class com.xiangjia.locallife.model.** { *; }
+
+# 防止混淆 ViewBinding 和 DataBinding
+-keep class * extends androidx.viewbinding.ViewBinding {
+    public static *** inflate(...);
+    public static *** bind(...);
+}
