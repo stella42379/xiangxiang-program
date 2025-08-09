@@ -13,7 +13,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@mipmap/ic_launcher"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -24,11 +24,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="湘湘管家"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/app_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 副标题 -->
+    <TextView
+        android:id="@+id/app_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="亲民服务小程序"
+        android:textSize="16sp"
+        android:textColor="#E0FFFFFF"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 英文副标题 -->
+    <TextView
+        android:id="@+id/app_subtitle_en"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="XiangXiang Butler"
+        android:textSize="14sp"
+        android:textColor="#C0FFFFFF"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/app_subtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -38,11 +64,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="60dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="16dp"
         android:backgroundTint="#F0FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/app_name"
+        app:layout_constraintTop_toBottomOf="@id/app_subtitle_en"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -50,62 +76,110 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="32dp">
 
-            <!-- 用户名输入 -->
+            <!-- 用户名输入框 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/username_input_layout"
+                android:id="@+id/til_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:hint="用户名或邮箱"
                 app:boxCornerRadiusTopStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@drawable/ic_person"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="请输入用户名"
-                    android:inputType="text"
-                    android:singleLine="true" />
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- 密码输入 -->
+            <!-- 密码输入框 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_input_layout"
+                android:id="@+id/til_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:hint="请输入密码"
                 app:boxCornerRadiusTopStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:passwordToggleEnabled="true"
+                app:startIconDrawable="@drawable/ic_lock"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="请输入密码"
                     android:inputType="textPassword"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- 登录按钮 -->
+            <!-- 用户协议勾选框 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cb_agreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:buttonTint="@color/primary_color" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="我已阅读并同意用户协议和隐私政策"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- 微信快速登录按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_wechat_login"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="微信快速登录"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                app:cornerRadius="28dp"
+                app:icon="@drawable/ic_wechat"
+                app:iconTint="@android:color/white"
+                app:iconGravity="textStart"
+                android:backgroundTint="#1AAD19"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 账户登录按钮 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="登录"
+                android:text="账户登录"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="28dp"
+                app:icon="@drawable/ic_login"
+                app:iconGravity="textStart"
                 android:backgroundTint="@color/primary_color"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="16dp" />
@@ -124,7 +198,7 @@
                     android:text="立即注册"
                     android:textColor="@color/primary_color"
                     android:textSize="14sp"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:layout_weight="1"
                     android:gravity="center" />
@@ -141,7 +215,7 @@
                     android:text="跳过登录"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="14sp"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:layout_weight="1"
                     android:gravity="center" />
@@ -157,10 +231,10 @@
         android:id="@+id/version_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="湘湘管家 v1.0.0"
+        android:text="湘湘管家 v2.0.0"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

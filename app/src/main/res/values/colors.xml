@@ -7,6 +7,22 @@
     <color name="primary_light">#BBDEFB</color>
     <color name="accent_color">#FF4081</color>
     
+    <!-- ============ 登录页面专用颜色（新增）============ -->
+    <!-- 登录渐变色彩 - 参考小程序设计 -->
+    <color name="login_gradient_start">#6366F1</color>
+    <color name="login_gradient_center">#8B5CF6</color>
+    <color name="login_gradient_end">#EC4899</color>
+    
+    <!-- 微信绿色 -->
+    <color name="wechat_green">#1AAD19</color>
+    <color name="wechat_green_dark">#0D8912</color>
+    
+    <!-- 登录卡片色彩 -->
+    <color name="login_card_background">#F0FFFFFF</color>
+    <color name="login_text_white">#FFFFFF</color>
+    <color name="login_text_white_secondary">#E0FFFFFF</color>
+    <color name="login_text_white_tertiary">#C0FFFFFF</color>
+    
     <!-- ============ 背景色系 ============ -->
     <color name="main_background">#FFF6F6F6</color>
     <color name="background_primary">#FFFFFF</color>
@@ -151,4 +167,20 @@
     <!-- 点赞相关颜色 -->
     <color name="like_active">#F44336</color>
     <color name="like_inactive">#9E9E9E</color>
+
+    <!-- ============ 输入框颜色（新增）============ -->
+    <color name="input_background">#F9FAFB</color>
+    <color name="input_border">#D1D5DB</color>
+    <color name="input_border_focused">#2d8cf0</color>
+    <color name="input_text">#1F2937</color>
+    <color name="input_hint">#9CA3AF</color>
+    
+    <!-- ============ Material Design 标准色彩（新增）============ -->
+    <color name="colorPrimary">@color/primary_color</color>
+    <color name="colorPrimaryDark">@color/primary_dark</color>
+    <color name="colorAccent">@color/accent_color</color>
+    <color name="colorSurface">@color/background_primary</color>
+    <color name="colorOnPrimary">@color/text_white</color>
+    <color name="colorOnSurface">@color/text_primary</color>
+    <color name="colorOnBackground">@color/text_primary</color>
 </resources>

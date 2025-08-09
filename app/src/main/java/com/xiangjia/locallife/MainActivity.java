@@ -1,5 +1,6 @@
 package com.xiangjia.locallife;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +21,11 @@ import com.xiangjia.locallife.ui.fragment.LocalNewsFragment;
 import com.xiangjia.locallife.ui.fragment.DifyFragment;
 import com.xiangjia.locallife.ui.fragment.MyFragment;
 import com.xiangjia.locallife.ui.fragment.ForumFragment;
+import com.xiangjia.locallife.util.SharedPrefsUtil;
 
 
 /**
- * 湘湘管家主Activity - 安全集成新MyFragment版本
+ * 湘湘管家主Activity - 安全集成新MyFragment版本 + 登录检查
  */
 public class MainActivity extends AppCompatActivity {
     
@@ -44,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
         
         Log.d(TAG, "湘湘管家MainActivity启动");
         
+        // ========== 新增：登录状态检查 ==========
+        if (!checkLoginStatus()) {
+            return; // 如果未登录，直接返回（已跳转到登录页）
+        }
+        
+        // 显示欢迎信息
+        showWelcomeMessage();
+        // ========== 登录检查结束 ==========
+        
         try {
             createMainLayout();
             setupViewPager();
@@ -54,6 +65,101 @@ public class MainActivity extends AppCompatActivity {
             createErrorLayout();
         }
     }
+    
+    // ========== 新增：登录相关方法 ==========
+    /**
+     * 检查登录状态
+     */
+    private boolean checkLoginStatus() {
+        try {
+            if (!SharedPrefsUtil.isLoggedIn(this)) {
+                Log.d(TAG, "用户未登录，跳转到登录页面");
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return false;
+            }
+            
+            Log.d(TAG, "用户已登录: " + SharedPrefsUtil.getUsername(this));
+            return true;
+        } catch (Exception e) {
+            Log.w(TAG, "登录状态检查失败，允许继续: " + e.getMessage());
+            return true; // 如果检查失败，允许继续运行
+        }
+    }
+    
+    /**
+     * 显示欢迎信息
+     */
+    private void showWelcomeMessage() {
+        try {
+            String username = SharedPrefsUtil.getUsername(this);
+            String nickname = SharedPrefsUtil.getNickname(this);
+            String displayName = (nickname != null && !nickname.isEmpty()) ? nickname : username;
+            
+            if (displayName != null && !displayName.isEmpty()) {
+                Log.d(TAG, "欢迎回来，" + displayName + "!");
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "获取用户信息失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 获取当前用户信息用于Fragment使用
+     */
+    public String getCurrentUserId() {
+        try {
+            return SharedPrefsUtil.getUserId(this);
+        } catch (Exception e) {
+            Log.w(TAG, "获取用户ID失败: " + e.getMessage());
+            return "guest_user";
+        }
+    }
+    
+    public String getCurrentUsername() {
+        try {
+            return SharedPrefsUtil.getUsername(this);
+        } catch (Exception e) {
+            Log.w(TAG, "获取用户名失败: " + e.getMessage());
+            return "游客用户";
+        }
+    }
+    
+    public String getCurrentUserNickname() {
+        try {
+            return SharedPrefsUtil.getNickname(this);
+        } catch (Exception e) {
+            Log.w(TAG, "获取昵称失败: " + e.getMessage());
+            return getCurrentUsername();
+        }
+    }
+    
+    public String getCurrentUserRole() {
+        try {
+            return SharedPrefsUtil.getUserRole(this);
+        } catch (Exception e) {
+            Log.w(TAG, "获取用户角色失败: " + e.getMessage());
+            return "user";
+        }
+    }
+    
+    /**
+     * 退出登录
+     */
+    public void logout() {
+        try {
+            SharedPrefsUtil.clearUserInfo(this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            Log.e(TAG, "退出登录失败: " + e.getMessage());
+        }
+    }
+    // ========== 登录相关方法结束 ==========
     
     /**
      * 创建主布局
@@ -310,10 +416,21 @@ public class MainActivity extends AppCompatActivity {
         errorDesc.setTextSize(16);
         errorDesc.setTextColor(Color.parseColor("#6B7280"));
         errorDesc.setGravity(android.view.Gravity.CENTER);
-        errorDesc.setPadding(0, dp(12), 0, 0);
+        errorDesc.setPadding(0, dp(12), 0, dp(20));
+        
+        // ========== 新增：退出登录按钮 ==========
+        TextView logoutButton = new TextView(this);
+        logoutButton.setText("退出登录");
+        logoutButton.setTextSize(14);
+        logoutButton.setTextColor(Color.parseColor("#6B7280"));
+        logoutButton.setPadding(20, 20, 20, 20);
+        logoutButton.setGravity(android.view.Gravity.CENTER);
+        logoutButton.setOnClickListener(v -> logout());
         
         errorLayout.addView(errorTitle);
         errorLayout.addView(errorDesc);
+        errorLayout.addView(logoutButton);
+        // ========== 退出登录按钮结束 ==========
         
         setContentView(errorLayout);
     }
@@ -385,7 +502,19 @@ public class MainActivity extends AppCompatActivity {
             userIcon.setGravity(android.view.Gravity.CENTER);
             
             TextView userName = new TextView(getContext());
-            userName.setText("湘湘用户");
+            // ========== 新增：显示登录用户信息 ==========
+            try {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                if (mainActivity != null) {
+                    String displayName = mainActivity.getCurrentUserNickname();
+                    userName.setText(displayName != null ? displayName : "湘湘用户");
+                } else {
+                    userName.setText("湘湘用户");
+                }
+            } catch (Exception e) {
+                userName.setText("湘湘用户");
+            }
+            // ========== 用户信息显示结束 ==========
             userName.setTextSize(18);
             userName.setTextColor(Color.parseColor("#484D61"));
             userName.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -419,8 +548,29 @@ public class MainActivity extends AppCompatActivity {
             tipsDesc.setPadding(0, dp(10), 0, 0);
             tipsDesc.setLineSpacing(dp(4), 1.0f);
             
+            // ========== 新增：退出登录按钮 ==========
+            TextView logoutButton = new TextView(getContext());
+            logoutButton.setText("🚪 退出登录");
+            logoutButton.setTextSize(16);
+            logoutButton.setTextColor(Color.parseColor("#EF4444"));
+            logoutButton.setGravity(android.view.Gravity.CENTER);
+            logoutButton.setPadding(dp(20), dp(15), dp(20), dp(15));
+            logoutButton.setBackground(createButtonBackground());
+            logoutButton.setOnClickListener(v -> {
+                try {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    if (mainActivity != null) {
+                        mainActivity.logout();
+                    }
+                } catch (Exception e) {
+                    Log.e("SimplePersonalFragment", "退出登录失败", e);
+                }
+            });
+            // ========== 退出登录按钮结束 ==========
+            
             tipsCard.addView(tipsTitle);
             tipsCard.addView(tipsDesc);
+            tipsCard.addView(logoutButton);
             
             layout.addView(userInfoCard);
             layout.addView(tipsCard);
@@ -448,6 +598,16 @@ public class MainActivity extends AppCompatActivity {
             
             return card;
         }
+        
+        // ========== 新增：按钮背景样式 ==========
+        private android.graphics.drawable.Drawable createButtonBackground() {
+            android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+            bg.setCornerRadius(dp(8));
+            bg.setColor(Color.parseColor("#FEF2F2"));
+            bg.setStroke(dp(1), Color.parseColor("#FECACA"));
+            return bg;
+        }
+        // ========== 按钮背景样式结束 ==========
         
         private int dp(int dp) {
             float density = getResources().getDisplayMetrics().density;
@@ -501,6 +661,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "MainActivity onResume");
+        
+        // ========== 新增：检查登录状态 ==========
+        // 检查登录状态，如果用户在其他地方退出登录，则返回登录页
+        try {
+            if (!SharedPrefsUtil.isLoggedIn(this)) {
+                Log.d(TAG, "用户已退出登录，返回登录页面");
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "登录状态检查失败: " + e.getMessage());
+        }
+        // ========== 登录状态检查结束 ==========
     }
     
     @Override

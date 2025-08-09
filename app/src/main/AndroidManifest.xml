@@ -36,9 +36,11 @@
         android:theme="@style/Theme.LocalLife"
         tools:targetApi="31">
 
-        <!-- 主Activity - 应用启动入口 -->
+        <!-- ========== 登录注册相关Activity（新增） ========== -->
+        
+        <!-- 登录页面作为启动页面 -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LocalLife">
@@ -47,6 +49,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 注册页面 -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/Theme.LocalLife">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
+        <!-- 主Activity - 原来的启动入口，现在改为登录后进入 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LocalLife" />
 
         <!-- ========== 论坛相关Activity ========== -->
         
@@ -130,22 +151,6 @@
                 <data android:scheme="https" android:host="news.locallife.com" />
             </intent-filter>
         </activity>
-
-        <!-- ========== 用户相关Activity ========== -->
-        
-        <!-- 登录页面 -->
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.LocalLife" />
-            
-        <!-- 注册页面 -->
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.LocalLife" />
 
         <!-- ========== 地址管理相关Activity ========== -->
         
