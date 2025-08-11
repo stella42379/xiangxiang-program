@@ -150,7 +150,8 @@ public class MyFragment extends Fragment {
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMargins(dp(20), -dp(120), dp(20), dp(16)); // 重叠在背景上
+        // 正常的间距，避免卡片位置异常
+        cardParams.setMargins(dp(20), dp(16), dp(20), dp(16));
         profileCard.setLayoutParams(cardParams);
         
         LinearLayout profileContainer = new LinearLayout(getContext());
@@ -255,7 +256,8 @@ public class MyFragment extends Fragment {
         
         GradientDrawable statusBg = new GradientDrawable();
         statusBg.setCornerRadius(dp(12));
-        statusBg.setColor(Color.parseColor("#20D1FAE5"));
+        // 使用不透明的背景色
+        statusBg.setColor(Color.parseColor("#D1FAE5"));
         statusText.setBackground(statusBg);
         
         return statusText;
@@ -463,7 +465,8 @@ public class MyFragment extends Fragment {
         CardView card = new CardView(getContext());
         card.setRadius(dp(20));
         card.setCardElevation(dp(12));
-        card.setCardBackgroundColor(Color.parseColor("#95FFFFFF"));
+        // 统一使用纯白背景，避免透明效果
+        card.setCardBackgroundColor(Color.WHITE);
         return card;
     }
     
@@ -527,7 +530,8 @@ public class MyFragment extends Fragment {
         // 背景
         GradientDrawable itemBg = new GradientDrawable();
         itemBg.setCornerRadius(dp(16));
-        itemBg.setColor(Color.parseColor("#10484D61"));
+        // 白色背景，保持与其他卡片一致
+        itemBg.setColor(Color.WHITE);
         actionItem.setBackground(itemBg);
         
         // 图标
@@ -578,7 +582,8 @@ public class MyFragment extends Fragment {
         // 背景
         GradientDrawable itemBg = new GradientDrawable();
         itemBg.setCornerRadius(dp(12));
-        itemBg.setColor(Color.parseColor("#05484D61"));
+        // 使用白色背景，避免透明效果
+        itemBg.setColor(Color.WHITE);
         notificationItem.setBackground(itemBg);
         
         // 图标
@@ -705,13 +710,13 @@ public class MyFragment extends Fragment {
                 userStatus.setTextColor(Color.parseColor("#10B981"));
                 GradientDrawable statusBg = new GradientDrawable();
                 statusBg.setCornerRadius(dp(12));
-                statusBg.setColor(Color.parseColor("#20D1FAE5"));
+                statusBg.setColor(Color.parseColor("#D1FAE5"));
                 userStatus.setBackground(statusBg);
             } else {
                 userStatus.setTextColor(Color.parseColor("#F59E0B"));
                 GradientDrawable statusBg = new GradientDrawable();
                 statusBg.setCornerRadius(dp(12));
-                statusBg.setColor(Color.parseColor("#20FEF3C7"));
+                statusBg.setColor(Color.parseColor("#FEF3C7"));
                 userStatus.setBackground(statusBg);
             }
         }
