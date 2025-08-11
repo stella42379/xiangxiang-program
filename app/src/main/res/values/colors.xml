@@ -98,6 +98,10 @@
     <!-- 新闻背景颜色 -->
     <color name="news_background_primary">#FFFFFF</color>
     <color name="news_background_secondary">#F8F9FA</color>
+
+    <!-- 新闻页面专用颜色 -->
+    <color name="news_background">#F8F9FA</color>
+    <color name="news_card_shadow">#1A000000</color>
     
     <!-- 新闻毛玻璃效果颜色 -->
     <color name="news_glass_card">#47FFFFFF</color>           <!-- 新闻卡片毛玻璃背景 -->
@@ -114,6 +118,11 @@
     <color name="news_success_color">#4CAF50</color>
     <color name="news_warning_color">#FF9800</color>
     <color name="news_error_color">#F44336</color>
+
+    
+    <!-- 半透明颜色 -->
+    <color name="overlay_light">#80FFFFFF</color>
+    <color name="overlay_dark">#80000000</color>
     
     <!-- 新闻强调色条 -->
     <color name="news_accent_bar">#CCFEA76D</color>
@@ -187,4 +196,27 @@
     <!-- 你想要的状态栏/导航栏颜色；先给个安全默认 -->
     <color name="status_bar">#000000</color>
     <color name="navigation_bar">#000000</color>
+
+    <!-- 🎯 毛玻璃效果专用颜色 -->
+    <color name="glass_white_10">#1AFFFFFF</color>   <!-- 10%透明白色 -->
+    <color name="glass_white_20">#33FFFFFF</color>   <!-- 20%透明白色 -->
+    <color name="glass_white_25">#40FFFFFF</color>   <!-- 25%透明白色 -->
+    <color name="glass_white_30">#4DFFFFFF</color>   <!-- 30%透明白色 -->
+    <color name="glass_white_40">#66FFFFFF</color>   <!-- 40%透明白色 -->
+    <color name="glass_white_50">#80FFFFFF</color>   <!-- 50%透明白色 -->
+    
+    <!-- 🎯 毛玻璃卡片背景色 -->
+    <color name="glass_blue_50">#804FC3F7</color>    <!-- 50%透明蓝色 -->
+    <color name="glass_blue_dark_50">#8029B6F6</color> <!-- 50%透明深蓝色 -->
+    <color name="glass_red_50">#80FF6B6B</color>     <!-- 50%透明红色 -->
+    <color name="glass_orange_50">#80FF8A80</color>  <!-- 50%透明橙色 -->
+    <color name="glass_coral_50">#80FFAB91</color>   <!-- 50%透明珊瑚色 -->
+    <color name="glass_pink_50">#80FFCDD2</color>    <!-- 50%透明粉色 -->
+
+    <!-- 🎯 文字阴影颜色 -->
+    <color name="text_shadow_light">#40000000</color> <!-- 25%透明黑色 -->
+    <color name="text_shadow_dark">#60000000</color>  <!-- 37.5%透明黑色 -->
+
+    <color name="page_background">#FFFFFF</color>
+
 </resources>

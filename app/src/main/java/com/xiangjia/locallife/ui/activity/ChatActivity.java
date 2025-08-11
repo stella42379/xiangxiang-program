@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("AI助手");
+            getSupportActionBar().setTitle("社区论坛");
         }
     }
     

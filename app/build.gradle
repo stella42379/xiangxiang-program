@@ -21,6 +21,7 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -73,5 +74,9 @@ dependencies {
     
     // JSON处理
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 🎯 新增：Glide用于加载网络图片
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 纯色底保底 -->
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#FFB74D"
+                android:centerColor="#FFA726"
+                android:endColor="#FF9800"
+                android:angle="135" />
+        </shape>
+    </item>
+    <!-- 图片层（如果有图片文件的话） -->
+    <item>
+        <bitmap
+            android:src="@drawable/bg_welcome_header"
+            android:gravity="center"/>
+    </item>
+    <!-- 半透明遮罩层 -->
+    <item>
+        <shape>
+            <solid android:color="#20FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

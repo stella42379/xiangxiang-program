@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
                     android:text="今日时讯"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#333333"
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
                     android:alpha="0.7"
                     android:fontFamily="sans-serif"
                     android:text="Local News"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -140,9 +140,21 @@
                         android:layout_marginBottom="16dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="最新资讯"
-                        android:textColor="@color/text_primary"
+                        android:textColor="#333333"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <!-- 🆕 添加状态文本 -->
+                    <TextView
+                        android:id="@+id/status_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="正在加载最新新闻..."
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:visibility="visible" />
 
                     <!-- 下拉刷新 + 新闻列表 -->
                     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -178,7 +190,7 @@
                         android:drawablePadding="16dp"
                         android:gravity="center"
                         android:text="暂无新闻\n下拉刷新试试"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#666666"
                         android:textSize="16sp"
                         android:visibility="gone" />
 
@@ -190,7 +202,7 @@
                         android:gravity="center"
                         android:padding="24dp"
                         android:text="—— 已显示全部内容 ——"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#666666"
                         android:textSize="14sp" />
 
                 </LinearLayout>

@@ -1,16 +1,14 @@
 package com.xiangjia.locallife.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.graphics.Color;
-import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,253 +16,134 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.xiangjia.locallife.model.NewsItem;
-import com.xiangjia.locallife.ui.adapter.NewsAdapter;
-import com.xiangjia.locallife.ui.adapter.NewsCarouselAdapter;
-import com.xiangjia.locallife.ui.activity.NewsDetailActivity;
-import com.xiangjia.locallife.utils.NewsDataGenerator;
+import com.xiangjia.locallife.R;
+import com.xiangjia.locallife.network.NewsServiceManager;
+import com.xiangjia.locallife.network.NewsServiceManager.UnifiedNewsItem;
+import com.xiangjia.locallife.adapter.NewsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
- * 本地新闻Fragment - 完整功能版本
+ * 最稳版本的新闻页面 - 按小承建议优化
  */
 public class LocalNewsFragment extends Fragment {
-    
     private static final String TAG = "LocalNewsFragment";
     
-    // 主要视图组件
-    private SwipeRefreshLayout swipeRefreshLayout;
+    // UI组件
     private RecyclerView newsRecyclerView;
-    private ViewPager2 carouselViewPager;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private View loadingView;
+    private View errorView;
+    private TextView errorText;
     private TextView statusText;
     
-    // 适配器
+    // 数据相关
     private NewsAdapter newsAdapter;
-    private NewsCarouselAdapter carouselAdapter;
+    private List<UnifiedNewsItem> newsList;
+    private NewsServiceManager newsService;
     
-    // 数据
-    private List<NewsItem> newsList = new ArrayList<>();
-    private List<NewsItem> featuredNewsList = new ArrayList<>();
+    // 线程相关
+    private final ExecutorService ioExecutor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    
     private boolean isLoading = false;
     
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "LocalNewsFragment onCreateView");
+        return inflater.inflate(R.layout.fragment_local_news, container, false);
+    }
+    
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "LocalNewsFragment onViewCreated");
         
-        try {
-            // 创建主布局
-            LinearLayout mainLayout = createMainLayout();
-            
-            initViews(mainLayout);
-            initCarousel();
-            initRecyclerView();
-            loadNewsData();
-            
-            Log.d(TAG, "LocalNewsFragment 创建成功");
-            return mainLayout;
-            
-        } catch (Exception e) {
-            Log.e(TAG, "LocalNewsFragment 创建失败", e);
-            return createErrorLayout();
-        }
+        initViews(view);
+        initNewsService();
+        setupAdapter(); // 🔥 关键：先挂Adapter，避免 "No adapter attached"
+        setupSwipeRefresh();
+        loadNews(); // 然后才加载数据
     }
     
     /**
-     * 创建主布局
-     */
-    private LinearLayout createMainLayout() {
-        LinearLayout mainLayout = new LinearLayout(getContext());
-        mainLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.setBackgroundColor(Color.parseColor("#F5F5F5"));
-        
-        // 创建标题区域
-        LinearLayout titleLayout = createTitleLayout();
-        mainLayout.addView(titleLayout);
-        
-        // 创建轮播区域
-        LinearLayout carouselContainer = createCarouselContainer();
-        mainLayout.addView(carouselContainer);
-        
-        // 创建下拉刷新容器
-        swipeRefreshLayout = new SwipeRefreshLayout(getContext());
-        LinearLayout.LayoutParams refreshParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
-        );
-        swipeRefreshLayout.setLayoutParams(refreshParams);
-        
-        // 创建新闻列表容器
-        LinearLayout newsContainer = createNewsListContainer();
-        swipeRefreshLayout.addView(newsContainer);
-        mainLayout.addView(swipeRefreshLayout);
-        
-        return mainLayout;
-    }
-    
-    /**
-     * 创建标题布局
-     */
-    private LinearLayout createTitleLayout() {
-        LinearLayout titleLayout = new LinearLayout(getContext());
-        titleLayout.setOrientation(LinearLayout.VERTICAL);
-        titleLayout.setPadding(dp(16), dp(16), dp(16), dp(8));
-        titleLayout.setBackgroundColor(Color.WHITE);
-        
-        TextView mainTitle = new TextView(getContext());
-        mainTitle.setText("今日时讯");
-        mainTitle.setTextSize(32);
-        mainTitle.setTextColor(Color.parseColor("#333333"));
-        mainTitle.setTypeface(null, android.graphics.Typeface.BOLD);
-        
-        TextView subTitle = new TextView(getContext());
-        subTitle.setText("Local News");
-        subTitle.setTextSize(16);
-        subTitle.setTextColor(Color.parseColor("#666666"));
-        subTitle.setPadding(0, dp(8), 0, 0);
-        
-        titleLayout.addView(mainTitle);
-        titleLayout.addView(subTitle);
-        
-        return titleLayout;
-    }
-    
-    /**
-     * 创建轮播容器
-     */
-    private LinearLayout createCarouselContainer() {
-        LinearLayout carouselContainer = new LinearLayout(getContext());
-        carouselContainer.setOrientation(LinearLayout.VERTICAL);
-        carouselContainer.setBackgroundColor(Color.WHITE);
-        carouselContainer.setPadding(dp(16), 0, dp(16), dp(16));
-        
-        LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(220)
-        );
-        carouselContainer.setLayoutParams(containerParams);
-        
-        // 创建轮播ViewPager
-        carouselViewPager = new ViewPager2(getContext());
-        LinearLayout.LayoutParams vpParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(200)
-        );
-        carouselViewPager.setLayoutParams(vpParams);
-        
-        carouselContainer.addView(carouselViewPager);
-        
-        return carouselContainer;
-    }
-    
-    /**
-     * 创建新闻列表容器
-     */
-    private LinearLayout createNewsListContainer() {
-        LinearLayout newsContainer = new LinearLayout(getContext());
-        newsContainer.setOrientation(LinearLayout.VERTICAL);
-        newsContainer.setBackgroundColor(Color.WHITE);
-        newsContainer.setPadding(dp(16), dp(16), dp(16), 0);
-        
-        // 列表标题
-        TextView listTitle = new TextView(getContext());
-        listTitle.setText("最新资讯");
-        listTitle.setTextSize(18);
-        listTitle.setTextColor(Color.parseColor("#333333"));
-        listTitle.setTypeface(null, android.graphics.Typeface.BOLD);
-        listTitle.setPadding(0, 0, 0, dp(16));
-        
-        // 状态文本
-        statusText = new TextView(getContext());
-        statusText.setText("正在加载新闻...");
-        statusText.setTextSize(14);
-        statusText.setTextColor(Color.parseColor("#666666"));
-        statusText.setPadding(0, 0, 0, dp(8));
-        
-        // RecyclerView
-        newsRecyclerView = new RecyclerView(getContext());
-        LinearLayout.LayoutParams recyclerParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        newsRecyclerView.setLayoutParams(recyclerParams);
-        
-        newsContainer.addView(listTitle);
-        newsContainer.addView(statusText);
-        newsContainer.addView(newsRecyclerView);
-        
-        return newsContainer;
-    }
-    
-    /**
-     * 创建错误布局
-     */
-    private LinearLayout createErrorLayout() {
-        LinearLayout errorLayout = new LinearLayout(getContext());
-        errorLayout.setOrientation(LinearLayout.VERTICAL);
-        errorLayout.setGravity(android.view.Gravity.CENTER);
-        errorLayout.setBackgroundColor(Color.WHITE);
-        errorLayout.setPadding(dp(40), dp(80), dp(40), dp(40));
-        
-        TextView errorText = new TextView(getContext());
-        errorText.setText("新闻页面加载失败\n请稍后重试");
-        errorText.setTextSize(16);
-        errorText.setTextColor(Color.parseColor("#EF4444"));
-        errorText.setGravity(android.view.Gravity.CENTER);
-        
-        errorLayout.addView(errorText);
-        return errorLayout;
-    }
-    
-    /**
-     * 初始化视图
+     * 初始化视图组件
      */
     private void initViews(View view) {
-        Log.d(TAG, "视图初始化完成");
-    }
-    
-    /**
-     * 初始化轮播图
-     */
-    private void initCarousel() {
+        Log.d(TAG, "开始初始化视图组件");
+        
         try {
-            carouselAdapter = new NewsCarouselAdapter(getContext());
-            carouselViewPager.setAdapter(carouselAdapter);
+            newsRecyclerView = view.findViewById(R.id.news_recycler_view);
+            swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+            statusText = view.findViewById(R.id.status_text);
             
-            // 设置轮播图点击监听
-            carouselAdapter.setOnItemClickListener(this::navigateToNewsDetail);
+            // 使用statusText作为loading和error的显示
+            loadingView = statusText;
+            errorView = statusText;
+            errorText = statusText;
             
-            // 设置自动轮播
-            carouselViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    Log.d(TAG, "轮播切换到位置: " + position);
-                }
-            });
+            Log.d(TAG, "视图组件查找结果:");
+            Log.d(TAG, "newsRecyclerView: " + (newsRecyclerView != null ? "✅找到" : "❌未找到"));
+            Log.d(TAG, "swipeRefreshLayout: " + (swipeRefreshLayout != null ? "✅找到" : "❌未找到"));
+            Log.d(TAG, "statusText: " + (statusText != null ? "✅找到" : "❌未找到"));
             
-            Log.d(TAG, "轮播图初始化完成");
+            // 初始化数据
+            newsList = new ArrayList<>();
+            
+            Log.d(TAG, "视图组件初始化完成");
+            
         } catch (Exception e) {
-            Log.e(TAG, "轮播图初始化失败", e);
+            Log.e(TAG, "❌ 视图组件初始化失败", e);
         }
     }
     
     /**
-     * 初始化RecyclerView
+     * 初始化新闻服务
      */
-    private void initRecyclerView() {
+    private void initNewsService() {
         try {
-            newsAdapter = new NewsAdapter(getContext());
-            newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            newsRecyclerView.setAdapter(newsAdapter);
-            
-            // 设置点击监听
-            newsAdapter.setOnItemClickListener(this::navigateToNewsDetail);
-            
-            Log.d(TAG, "RecyclerView 初始化完成");
+            newsService = NewsServiceManager.getInstance();
+            Log.d(TAG, "✅ 新闻服务初始化成功");
         } catch (Exception e) {
-            Log.e(TAG, "RecyclerView 初始化失败", e);
-            statusText.setText("列表初始化失败");
+            Log.e(TAG, "❌ 新闻服务初始化失败", e);
+        }
+    }
+    
+    /**
+     * 🔥 关键：先设置Adapter，避免RecyclerView报错
+     */
+    private void setupAdapter() {
+        try {
+            if (newsRecyclerView != null) {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                newsRecyclerView.setLayoutManager(layoutManager);
+                
+                // 创建适配器（即使数据为空也要先挂上）
+                newsAdapter = new NewsAdapter(newsList, new NewsAdapter.OnNewsClickListener() {
+                    @Override
+                    public void onNewsClick(UnifiedNewsItem newsItem) {
+                        navigateToNewsDetail(newsItem);
+                    }
+                    
+                    @Override
+                    public void onShareClick(UnifiedNewsItem newsItem) {
+                        shareNews(newsItem);
+                    }
+                });
+                
+                // 🔥 关键：立即设置Adapter
+                newsRecyclerView.setAdapter(newsAdapter);
+                
+                Log.d(TAG, "✅ NewsAdapter已设置，避免了 'No adapter attached' 错误");
+            } else {
+                Log.e(TAG, "❌ newsRecyclerView为null，无法设置Adapter");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "❌ 设置Adapter失败", e);
         }
     }
     
@@ -273,166 +152,238 @@ public class LocalNewsFragment extends Fragment {
      */
     private void setupSwipeRefresh() {
         if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setColorSchemeColors(
+                0xFF2d8cf0,  // 蓝色
+                0xFF87CEEB,  // 天蓝色  
+                0xFFFFB6C1   // 粉色
+            );
+            
             swipeRefreshLayout.setOnRefreshListener(() -> {
-                Log.d(TAG, "用户下拉刷新");
-                refreshNewsData();
+                Log.d(TAG, "🔄 用户下拉刷新");
+                loadNews();
             });
             
-            // 设置刷新动画颜色
-            swipeRefreshLayout.setColorSchemeColors(
-                Color.parseColor("#2196F3"),
-                Color.parseColor("#4CAF50"),
-                Color.parseColor("#FF9800")
-            );
+            Log.d(TAG, "✅ 下拉刷新设置完成");
         }
     }
     
     /**
-     * 刷新新闻数据
+     * 🔥 核心方法：加载新闻数据
      */
-    private void refreshNewsData() {
+    private void loadNews() {
+        Log.d(TAG, "🚀 开始加载新闻数据");
+        
         if (isLoading) {
-            swipeRefreshLayout.setRefreshing(false);
+            Log.d(TAG, "⚠️ 正在加载中，跳过重复请求");
             return;
         }
         
-        isLoading = true;
-        statusText.setText("正在刷新新闻...");
+        // 显示加载状态
+        showLoading(true);
         
-        // 模拟网络请求延迟
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        // 🔥 关键：在后台线程执行网络请求
+        ioExecutor.execute(() -> {
+            Log.d(TAG, "📡 在后台线程开始网络请求");
+            
             try {
-                // 重新生成新闻数据
-                List<NewsItem> generatedNews = NewsDataGenerator.generateNewsData();
-                
-                newsList.clear();
-                newsList.addAll(generatedNews);
-                
-                // 更新轮播图数据（取前5条作为头条）
-                featuredNewsList.clear();
-                featuredNewsList.addAll(newsList.subList(0, Math.min(5, newsList.size())));
-                
-                // 更新UI
-                updateNewsListData();
-                updateCarouselData();
-                
-                statusText.setText("共 " + newsList.size() + " 条新闻（已更新）");
-                
-                Log.d(TAG, "新闻数据刷新完成，共" + newsList.size() + "条");
-                
-            } catch (Exception e) {
-                Log.e(TAG, "新闻数据刷新失败", e);
-                statusText.setText("刷新失败，请稍后重试");
-            } finally {
-                isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1500);
-    }
-    
-    /**
-     * 加载新闻数据
-     */
-    private void loadNewsData() {
-        if (isLoading) return;
-        
-        isLoading = true;
-        statusText.setText("正在加载新闻...");
-        
-        // 设置下拉刷新
-        setupSwipeRefresh();
-        
-        // 在后台线程生成数据
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            try {
-                // 使用数据生成器生成新闻数据
-                List<NewsItem> generatedNews = NewsDataGenerator.generateNewsData();
-                
-                newsList.clear();
-                newsList.addAll(generatedNews);
-                
-                // 准备头条新闻数据（前5条）
-                featuredNewsList.clear();
-                featuredNewsList.addAll(newsList.subList(0, Math.min(5, newsList.size())));
-                
-                // 更新UI
-                updateNewsListData();
-                updateCarouselData();
-                statusText.setText("共 " + newsList.size() + " 条新闻");
-                
-                Log.d(TAG, "新闻数据加载完成，共" + newsList.size() + "条");
-                
-            } catch (Exception e) {
-                Log.e(TAG, "新闻数据加载失败", e);
-                statusText.setText("加载失败，请稍后重试");
-            } finally {
-                isLoading = false;
-            }
-        }, 1000);
-    }
-    
-    /**
-     * 更新新闻列表数据
-     */
-    private void updateNewsListData() {
-        if (newsAdapter != null) {
-            newsAdapter.setNewsList(newsList);
-        }
-    }
-    
-    /**
-     * 更新轮播图数据
-     */
-    private void updateCarouselData() {
-        if (carouselAdapter != null) {
-            carouselAdapter.setFeaturedNews(featuredNewsList);
-        }
-    }
-    
-    /**
-     * 跳转到新闻详情页面
-     */
-    private void navigateToNewsDetail(NewsItem newsItem) {
-        try {
-            Log.d(TAG, "点击新闻: " + newsItem.getTitle());
-            
-            Intent intent = new Intent(getContext(), NewsDetailActivity.class);
-            intent.putExtra("news_title", newsItem.getTitle());
-            intent.putExtra("news_source", newsItem.getSource());
-            intent.putExtra("news_url", newsItem.getUrl());
-            intent.putExtra("news_thumbnail", newsItem.getThumbnail());
-            intent.putExtra("news_time", newsItem.getTime());
-            intent.putExtra("news_category", newsItem.getCategory());
-            
-            startActivity(intent);
-            
-            // 更新状态显示
-            if (statusText != null) {
-                statusText.setText("已打开: " + newsItem.getTitle());
-                
-                // 2秒后恢复原状态
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    if (statusText != null) {
-                        statusText.setText("共 " + newsList.size() + " 条新闻");
+                // 调用新闻服务
+                newsService.getAustralianNews(new NewsServiceManager.NewsCallback() {
+                    @Override
+                    public void onSuccess(List<UnifiedNewsItem> news) {
+                        Log.d(TAG, "✅ 澳洲新闻请求成功: " + (news != null ? news.size() : 0) + "条");
+                        
+                        // 🔥 关键：切换到主线程更新UI
+                        mainHandler.post(() -> {
+                            try {
+                                showLoading(false);
+                                
+                                if (news != null && !news.isEmpty()) {
+                                    hideError();
+                                    updateNewsList(news);
+                                    Log.d(TAG, "✅ UI更新完成，显示了 " + news.size() + " 条新闻");
+                                } else {
+                                    showError("没有获取到澳洲新闻，尝试加载国际新闻...");
+                                    // 尝试加载国际新闻
+                                    loadInternationalNewsAsFallback();
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "❌ 处理成功回调时出错", e);
+                                showError("处理新闻数据时出错: " + e.getMessage());
+                            }
+                        });
                     }
-                }, 2000);
+                    
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "❌ 澳洲新闻请求失败: " + error);
+                        
+                        // 🔥 关键：切换到主线程更新UI
+                        mainHandler.post(() -> {
+                            try {
+                                showLoading(false);
+                                showError("澳洲新闻加载失败，尝试国际新闻...");
+                                // 尝试加载国际新闻作为备用
+                                loadInternationalNewsAsFallback();
+                            } catch (Exception e) {
+                                Log.e(TAG, "❌ 处理错误回调时出错", e);
+                            }
+                        });
+                    }
+                });
+                
+            } catch (Exception e) {
+                Log.e(TAG, "❌ 网络请求异常", e);
+                
+                // 🔥 关键：异常时也要在主线程更新UI
+                mainHandler.post(() -> {
+                    showLoading(false);
+                    showError("网络请求异常: " + e.getMessage());
+                });
             }
-            
+        });
+    }
+    
+    /**
+     * 加载国际新闻作为备用
+     */
+    private void loadInternationalNewsAsFallback() {
+        Log.d(TAG, "🌍 尝试加载国际新闻作为备用");
+        
+        ioExecutor.execute(() -> {
+            try {
+                newsService.getInternationalNews(new NewsServiceManager.NewsCallback() {
+                    @Override
+                    public void onSuccess(List<UnifiedNewsItem> news) {
+                        Log.d(TAG, "✅ 国际新闻请求成功: " + (news != null ? news.size() : 0) + "条");
+                        
+                        mainHandler.post(() -> {
+                            try {
+                                showLoading(false);
+                                
+                                if (news != null && !news.isEmpty()) {
+                                    hideError();
+                                    updateNewsList(news);
+                                    Log.d(TAG, "✅ 国际新闻UI更新完成，显示了 " + news.size() + " 条新闻");
+                                } else {
+                                    showError("所有新闻源都没有数据");
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "❌ 处理国际新闻成功回调时出错", e);
+                                showError("处理国际新闻数据时出错: " + e.getMessage());
+                            }
+                        });
+                    }
+                    
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "❌ 国际新闻也请求失败: " + error);
+                        
+                        mainHandler.post(() -> {
+                            showLoading(false);
+                            showError("所有新闻源都加载失败: " + error);
+                        });
+                    }
+                });
+                
+            } catch (Exception e) {
+                Log.e(TAG, "❌ 国际新闻请求异常", e);
+                
+                mainHandler.post(() -> {
+                    showLoading(false);
+                    showError("国际新闻请求异常: " + e.getMessage());
+                });
+            }
+        });
+    }
+    
+    /**
+     * 🔥 关键：更新新闻列表（在主线程中调用）
+     */
+    private void updateNewsList(List<UnifiedNewsItem> news) {
+        try {
+            if (newsAdapter != null && news != null) {
+                newsList.clear();
+                newsList.addAll(news);
+                newsAdapter.notifyDataSetChanged();
+                
+                Log.d(TAG, "✅ 新闻列表更新完成，共 " + newsList.size() + " 条新闻");
+                
+                // 更新状态文字
+                if (statusText != null) {
+                    statusText.setText("共加载 " + newsList.size() + " 条新闻");
+                    statusText.setVisibility(View.VISIBLE);
+                }
+            } else {
+                Log.e(TAG, "❌ 无法更新新闻列表: adapter=" + (newsAdapter != null) + ", news=" + (news != null));
+            }
         } catch (Exception e) {
-            Log.e(TAG, "跳转新闻详情失败", e);
-            if (statusText != null) {
-                statusText.setText("跳转失败: " + e.getMessage());
-            }
+            Log.e(TAG, "❌ 更新新闻列表时出错", e);
         }
     }
     
     /**
-     * dp转px工具方法
+     * 显示/隐藏加载状态
      */
-    private int dp(int dp) {
-        if (getContext() == null) return dp;
-        float density = getContext().getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
+    private void showLoading(boolean show) {
+        isLoading = show;
+        
+        // 更新下拉刷新状态
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(show);
+        }
+        
+        // 更新状态文字
+        if (statusText != null) {
+            if (show) {
+                statusText.setText("正在加载最新新闻...");
+                statusText.setVisibility(View.VISIBLE);
+            }
+        }
+        
+        Log.d(TAG, show ? "🔄 显示加载状态" : "✅ 隐藏加载状态");
+    }
+    
+    /**
+     * 显示错误信息
+     */
+    private void showError(String message) {
+        if (statusText != null) {
+            statusText.setText("❌ " + message + "\n下拉刷新重试");
+            statusText.setVisibility(View.VISIBLE);
+        }
+        
+        Log.e(TAG, "❌ 显示错误: " + message);
+    }
+    
+    /**
+     * 隐藏错误信息
+     */
+    private void hideError() {
+        // 错误信息会被成功状态覆盖，这里不需要特别处理
+    }
+    
+    /**
+     * 跳转到新闻详情
+     */
+    private void navigateToNewsDetail(UnifiedNewsItem newsItem) {
+        try {
+            Log.d(TAG, "📰 点击新闻: " + newsItem.getTitle());
+            Toast.makeText(getContext(), "点击了: " + newsItem.getTitle(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "❌ 跳转新闻详情失败", e);
+        }
+    }
+    
+    /**
+     * 分享新闻
+     */
+    private void shareNews(UnifiedNewsItem newsItem) {
+        try {
+            Log.d(TAG, "📤 分享新闻: " + newsItem.getTitle());
+            Toast.makeText(getContext(), "分享: " + newsItem.getTitle(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "❌ 分享失败", e);
+        }
     }
     
     @Override
@@ -440,9 +391,10 @@ public class LocalNewsFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "LocalNewsFragment onResume");
         
-        // 如果没有数据，重新加载
+        // 如果没有数据且不在加载中，重新加载
         if (newsList.isEmpty() && !isLoading) {
-            loadNewsData();
+            Log.d(TAG, "🔄 Resume时重新加载数据");
+            loadNews();
         }
     }
     
@@ -450,5 +402,15 @@ public class LocalNewsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d(TAG, "LocalNewsFragment onDestroyView");
+        
+        // 清理资源
+        if (newsRecyclerView != null) {
+            newsRecyclerView.setAdapter(null);
+        }
+        
+        // 关闭线程池
+        if (ioExecutor != null && !ioExecutor.isShutdown()) {
+            ioExecutor.shutdown();
+        }
     }
 }

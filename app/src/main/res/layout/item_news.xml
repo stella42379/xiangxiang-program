@@ -1,104 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal"
-    android:padding="12dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="#FFFFFF">
 
-    <!-- 缩略图 -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="12dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
 
         <ImageView
-            android:id="@+id/news_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:id="@+id/news_image"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="12dp"
+            android:scaleType="centerCrop"
+            android:background="#F0F0F0"
+            android:contentDescription="新闻图片" />
 
-    </androidx.cardview.widget.CardView>
-
-    <!-- 新闻内容 -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!-- 新闻标题 -->
-        <TextView
-            android:id="@+id/news_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:lineSpacingExtra="1dp"
-            android:maxLines="2"
-            android:text="新闻标题"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="normal" />
-
-        <!-- 新闻元信息 -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <!-- 来源信息 -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/news_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:text="新闻标题"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingExtra="2dp" />
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginEnd="6dp"
-                    app:cardBackgroundColor="@color/primary_color"
-                    app:cardCornerRadius="2dp"
-                    app:cardElevation="0dp">
+            <TextView
+                android:id="@+id/news_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="新闻描述内容..."
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingExtra="1dp" />
 
-                    <ImageView
-                        android:id="@+id/source_icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="2dp"
-                        android:src="@drawable/ic_news_source"
-                        android:tint="@android:color/white" />
-
-                </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/news_source"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ABC News"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/news_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="新闻来源"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:layout_marginStart="8dp"
+                    android:text="2小时前"
+                    android:textSize="12sp"
+                    android:textColor="#999999" />
+
+                <ImageView
+                    android:id="@+id/share_button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@android:drawable/ic_menu_share"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:contentDescription="分享新闻" />
 
             </LinearLayout>
-
-            <!-- 时间信息 -->
-            <TextView
-                android:id="@+id/news_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1小时前"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>
