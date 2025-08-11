@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.material.chip.ChipGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -27,8 +26,8 @@ public class MainPageFragment extends Fragment {
     // UI组件 - 使用现有XML中的ID
     private EditText etChatInput;
     private Button btnSend;
-    private TextView tvHeaderTitle;
-    private TextView tvHeaderSub;
+    private TextView tvWelcome;
+    private TextView tvWelcomeSub;
     private TextView tvManagerGreeting;
     private CardView layoutChatArea;
     private RecyclerView recyclerMaintenance;
@@ -60,19 +59,13 @@ public class MainPageFragment extends Fragment {
     private void initViews(View rootView) {
         try {
             // 欢迎文本
-            tvHeaderTitle = rootView.findViewById(R.id.tvHeaderTitle);
-            tvHeaderSub = rootView.findViewById(R.id.tvHeaderSub);
+            tvWelcome = rootView.findViewById(R.id.tv_welcome);
+            tvWelcomeSub = rootView.findViewById(R.id.tv_welcome_sub);
             
             // 聊天相关
             etChatInput = rootView.findViewById(R.id.et_chat_input);
             btnSend = rootView.findViewById(R.id.btn_send);
             tvManagerGreeting = rootView.findViewById(R.id.tv_manager_greeting);
-
-            // 隐藏通用头部中的分类ChipGroup
-            ChipGroup chipGroup = rootView.findViewById(R.id.chipGroup);
-            if (chipGroup != null) {
-                chipGroup.setVisibility(View.GONE);
-            }
             
             // 聊天区域卡片
             layoutChatArea = rootView.findViewById(R.id.layout_chat_area);
@@ -80,13 +73,6 @@ public class MainPageFragment extends Fragment {
             // 维修和紧急服务列表
             recyclerMaintenance = rootView.findViewById(R.id.recycler_maintenance);
             recyclerEmergency = rootView.findViewById(R.id.recycler_emergency);
-
-            if (recyclerMaintenance != null) {
-                recyclerMaintenance.setNestedScrollingEnabled(false);
-            }
-            if (recyclerEmergency != null) {
-                recyclerEmergency.setNestedScrollingEnabled(false);
-            }
             
             Log.d(TAG, "UI组件初始化成功");
         } catch (Exception e) {
@@ -125,11 +111,11 @@ public class MainPageFragment extends Fragment {
      */
     private void setupInitialData() {
         // 设置欢迎文本
-        if (tvHeaderTitle != null) {
-            tvHeaderTitle.setText("欢迎回来！");
+        if (tvWelcome != null) {
+            tvWelcome.setText("欢迎回来！");
         }
-        if (tvHeaderSub != null) {
-            tvHeaderSub.setText("Welcome Back!");
+        if (tvWelcomeSub != null) {
+            tvWelcomeSub.setText("Welcome Back!");
         }
         if (tvManagerGreeting != null) {
             tvManagerGreeting.setText("请问有什么需要帮助的吗？");
@@ -211,8 +197,8 @@ public class MainPageFragment extends Fragment {
         // 清理引用
         etChatInput = null;
         btnSend = null;
-        tvHeaderTitle = null;
-        tvHeaderSub = null;
+        tvWelcome = null;
+        tvWelcomeSub = null;
         tvManagerGreeting = null;
         layoutChatArea = null;
         recyclerMaintenance = null;

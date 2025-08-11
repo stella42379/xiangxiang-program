@@ -111,21 +111,8 @@
     <!-- 新闻加载状态 -->
     <dimen name="news_loading_padding">40dp</dimen>
     <dimen name="news_empty_padding">40dp</dimen>
-
+    
     <!-- 新闻轮播指示器 -->
     <dimen name="carousel_indicator_margin">16dp</dimen>
     <dimen name="carousel_indicator_bottom_margin">20dp</dimen>
-
-    <!-- 通用页面与组件尺寸 -->
-    <dimen name="page_padding_h">16dp</dimen>
-    <dimen name="card_radius">16dp</dimen>
-    <dimen name="card_padding">16dp</dimen>
-    <dimen name="card_elevation">4dp</dimen>
-    <dimen name="header_radius_bottom">24dp</dimen>
-    <dimen name="header_height">184dp</dimen>
-    <dimen name="header_pad_h">24dp</dimen>
-    <dimen name="header_pad_top">28dp</dimen>
-    <dimen name="header_pad_bottom">16dp</dimen>
-    <dimen name="list_item_gap">12dp</dimen>
-    <dimen name="section_gap_top">16dp</dimen>
 </resources>

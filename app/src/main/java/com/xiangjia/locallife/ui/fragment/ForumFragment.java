@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +27,7 @@ import com.xiangjia.locallife.R;
 import com.xiangjia.locallife.ui.activity.CreatePostActivity;
 import com.xiangjia.locallife.ui.activity.PostDetailActivity;
 import com.xiangjia.locallife.ui.activity.DataInitActivity;
+import com.xiangjia.locallife.ui.activity.SearchActivity;
 import com.xiangjia.locallife.ui.adapter.ForumPostAdapter;
 import com.xiangjia.locallife.model.ForumPost;
 import com.xiangjia.locallife.model.User;
@@ -207,18 +207,18 @@ public class ForumFragment extends Fragment {
      * 初始化视图组件
      */
     private void initViews(View view) {
-        categoryChipGroup = view.findViewById(R.id.chipGroup);
+        categoryChipGroup = view.findViewById(R.id.category_chip_group);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         recyclerView = view.findViewById(R.id.recycler_view_posts);
         fabCreatePost = view.findViewById(R.id.fab_create_post);
-
-        TextView headerTitle = view.findViewById(R.id.tvHeaderTitle);
-        TextView headerSub = view.findViewById(R.id.tvHeaderSub);
-        if (headerTitle != null) {
-            headerTitle.setText("社区论坛");
-        }
-        if (headerSub != null) {
-            headerSub.setText("Community Forum");
+        
+        // 添加搜索按钮
+        View searchButton = view.findViewById(R.id.btn_search);
+        if (searchButton != null) {
+            searchButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                startActivity(intent);
+            });
         }
     }
     
@@ -229,7 +229,6 @@ public class ForumFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(postAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
         
         // 设置帖子点击监听
         postAdapter.setOnPostClickListener(new ForumPostAdapter.OnPostClickListener() {
