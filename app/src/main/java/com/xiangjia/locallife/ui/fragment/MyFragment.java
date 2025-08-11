@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,6 +70,7 @@ public class MyFragment extends Fragment {
         
         try {
             View rootView = createPersonalPageLayout();
+            setupStatusBar();
             loadData();
             setupAnimations();
             return rootView;
@@ -91,28 +93,35 @@ public class MyFragment extends Fragment {
         );
         swipeRefreshLayout.setOnRefreshListener(this::onPullDownRefresh);
         
+        // 背景渐变
+        GradientDrawable bgGradient = new GradientDrawable();
+        bgGradient.setOrientation(GradientDrawable.Orientation.TL_BR);
+        bgGradient.setColors(new int[]{
+            Color.parseColor("#E6F3FF"),
+            Color.parseColor("#B3D9FF"),
+            Color.parseColor("#87CEEB")
+        });
+        swipeRefreshLayout.setBackground(bgGradient);
+
         // 滚动容器
         scrollView = new ScrollView(getContext());
-        scrollView.setBackgroundColor(Color.parseColor("#F8F8F8"));
+        scrollView.setBackgroundColor(Color.TRANSPARENT);
         scrollView.setFillViewport(true);
-        
+
         mainContainer = new LinearLayout(getContext());
         mainContainer.setOrientation(LinearLayout.VERTICAL);
-        mainContainer.setPadding(0, 0, 0, dp(20));
-        
-        // 1. 背景图片层
-        createBackgroundLayer();
-        
-        // 2. 用户信息区域
+        mainContainer.setPadding(0, getStatusBarHeight(), 0, dp(20));
+
+        // 1. 用户信息区域
         createUserProfileSection();
-        
-        // 3. 便捷功能区域
+
+        // 2. 便捷功能区域
         createQuickActionsSection();
-        
-        // 4. 通知公告区域
+
+        // 3. 通知公告区域
         createNotificationsSection();
-        
-        // 🆕 5. 退出登录区域
+
+        // 🆕 4. 退出登录区域
         createLogoutSection();
         
         scrollView.addView(mainContainer);
@@ -121,36 +130,14 @@ public class MyFragment extends Fragment {
     }
     
     /**
-     * 1. 创建背景层
-     */
-    private void createBackgroundLayer() {
-        LinearLayout bgContainer = new LinearLayout(getContext());
-        bgContainer.setLayoutParams(new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(280)
-        ));
-        
-        // 渐变背景
-        GradientDrawable bgGradient = new GradientDrawable();
-        bgGradient.setOrientation(GradientDrawable.Orientation.TL_BR);
-        bgGradient.setColors(new int[]{
-            Color.parseColor("#E6F3FF"),
-            Color.parseColor("#B3D9FF"),
-            Color.parseColor("#87CEEB")
-        });
-        bgContainer.setBackground(bgGradient);
-        
-        mainContainer.addView(bgContainer);
-    }
-    
-    /**
-     * 2. 创建用户信息区域
+     * 1. 创建用户信息区域
      */
     private void createUserProfileSection() {
         CardView profileCard = createGlassCard();
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMargins(dp(20), -dp(120), dp(20), dp(16)); // 重叠在背景上
+        cardParams.setMargins(dp(20), dp(20), dp(20), dp(16));
         profileCard.setLayoutParams(cardParams);
         
         LinearLayout profileContainer = new LinearLayout(getContext());
@@ -461,9 +448,9 @@ public class MyFragment extends Fragment {
      */
     private CardView createGlassCard() {
         CardView card = new CardView(getContext());
-        card.setRadius(dp(20));
-        card.setCardElevation(dp(12));
-        card.setCardBackgroundColor(Color.parseColor("#95FFFFFF"));
+        card.setRadius(dp(16));
+        card.setCardElevation(dp(8));
+        card.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
         return card;
     }
     
@@ -527,7 +514,7 @@ public class MyFragment extends Fragment {
         // 背景
         GradientDrawable itemBg = new GradientDrawable();
         itemBg.setCornerRadius(dp(16));
-        itemBg.setColor(Color.parseColor("#10484D61"));
+        itemBg.setColor(Color.parseColor("#FFFFFF"));
         actionItem.setBackground(itemBg);
         
         // 图标
@@ -578,7 +565,7 @@ public class MyFragment extends Fragment {
         // 背景
         GradientDrawable itemBg = new GradientDrawable();
         itemBg.setCornerRadius(dp(12));
-        itemBg.setColor(Color.parseColor("#05484D61"));
+        itemBg.setColor(Color.parseColor("#FFFFFF"));
         notificationItem.setBackground(itemBg);
         
         // 图标
@@ -912,6 +899,30 @@ public class MyFragment extends Fragment {
      */
     private int dp(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    /**
+     * 获取状态栏高度
+     */
+    private int getStatusBarHeight() {
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
+    /**
+     * 设置沉浸式状态栏，文字深色
+     */
+    private void setupStatusBar() {
+        if (getActivity() == null) return;
+        Window window = requireActivity().getWindow();
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        );
+        window.setStatusBarColor(Color.TRANSPARENT);
     }
     
     /**
