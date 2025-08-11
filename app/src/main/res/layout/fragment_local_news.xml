@@ -1,216 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 🎯 新闻页面 - 与主页保持统一的毛玻璃风格 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_news_page">
-
-    <!-- 背景图片 -->
+    android:layout_height="match_parent">
+    
+    <!-- 🎯 背景图片层 - 与主页一致 -->
     <ImageView
+        android:id="@+id/iv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_news_gradient"
-        android:alpha="0.8" />
-
-    <ScrollView
+        android:src="@drawable/bg_main_page_fallback"
+        android:adjustViewBounds="false" />
+    
+    <!-- 🎯 内容滚动层 - 改用 NestedScrollView -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
+        android:background="@android:color/transparent">
+        
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- 顶部透明导航栏 -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@android:color/transparent" />
-
-            <!-- 状态栏 -->
-            <LinearLayout
-                android:id="@+id/status_bar"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_glass_status_bar"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/current_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="12:34"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <!-- 页面主标题区域 -->
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:fillViewport="true">
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/news_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:text="今日时讯"
-                    android:textColor="#333333"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/news_subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:alpha="0.7"
-                    android:fontFamily="sans-serif"
-                    android:text="Local News"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <!-- 新闻轮播区域 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="20dp"
                 android:orientation="vertical">
-
-                <!-- 轮播容器 -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="8dp">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/carousel_viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- 轮播指示器 -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/carousel_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal" />
-
-            </LinearLayout>
-
-            <!-- 新闻列表区域 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
+                
+                <!-- 1. 顶部标题区域 - 与主页风格一致 -->
                 <LinearLayout
+                    android:id="@+id/layout_title_section"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:layout_height="180dp"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- 列表标题 -->
+                    android:background="@drawable/bg_welcome_fallback"
+                    android:padding="30dp"
+                    android:gravity="center_vertical">
+                    
                     <TextView
+                        android:id="@+id/news_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="最新资讯"
-                        android:textColor="#333333"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <!-- 🆕 添加状态文本 -->
+                        android:text="今日时讯"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#041830"
+                        android:shadowColor="#40000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="4" />
+                    
+                    <TextView
+                        android:id="@+id/news_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Local News"
+                        android:textSize="16sp"
+                        android:textColor="#041830"
+                        android:layout_marginTop="8dp"
+                        android:shadowColor="#40000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="4" />
+                        
+                    <!-- 🆕 状态文本显示在标题区域 -->
                     <TextView
                         android:id="@+id/status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在加载最新新闻..."
+                        android:textSize="14sp"
+                        android:textColor="#041830"
+                        android:layout_marginTop="12dp"
+                        android:alpha="0.8"
+                        android:shadowColor="#40000000"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="2" />
+                </LinearLayout>
+                
+                <!-- 2. 新闻轮播区域 - 毛玻璃卡片 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_news_carousel"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="12dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_blur_strong">
+                        
+                        <!-- 轮播标题 -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="头条推荐"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#484d61"
+                            android:layout_margin="16dp" />
+                        
+                        <!-- 轮播容器 -->
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/carousel_viewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginBottom="16dp" />
+                        
+                        <!-- 轮播指示器 -->
+                        <LinearLayout
+                            android:id="@+id/carousel_indicators"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="16dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                
+                <!-- 3. 新闻列表区域 - 毛玻璃容器 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp">
+                    
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="正在加载最新新闻..."
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        android:gravity="center"
-                        android:visibility="visible" />
-
-                    <!-- 下拉刷新 + 新闻列表 -->
-                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                        android:id="@+id/swipe_refresh_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_blur_light"
+                        android:padding="20dp">
+                        
+                        <!-- 列表标题 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp">
+                            
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="最新资讯"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="#484d61" />
+                            
+                            <!-- 刷新按钮 -->
+                            <ImageButton
+                                android:id="@+id/btn_refresh"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_refresh_button_glass"
+                                android:src="@drawable/ic_refresh"
+                                android:scaleType="centerInside"
+                                android:padding="8dp" />
+                        </LinearLayout>
+                        
+                        <!-- 新闻列表 -->
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/news_recycler_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false" />
-
-                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-                    <!-- 加载进度条 -->
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="40dp"
-                        android:visibility="gone" />
-
-                    <!-- 空状态文本 -->
-                    <TextView
-                        android:id="@+id/empty_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="40dp"
-                        android:drawableTop="@drawable/ic_news_empty"
-                        android:drawablePadding="16dp"
-                        android:gravity="center"
-                        android:text="暂无新闻\n下拉刷新试试"
-                        android:textColor="#666666"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-
-                    <!-- 底部占位 -->
-                    <TextView
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never" />
+                        
+                        <!-- 加载更多按钮 -->
+                        <Button
+                            android:id="@+id/btn_load_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="16dp"
+                            android:text="加载更多"
+                            android:textColor="#484d61"
+                            android:background="@drawable/bg_load_more_button_glass"
+                            android:paddingHorizontal="24dp"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                
+                <!-- 4. 空状态/错误状态 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_empty_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:visibility="gone">
+                    
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_blur_light"
                         android:gravity="center"
-                        android:padding="24dp"
-                        android:text="—— 已显示全部内容 ——"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-    </ScrollView>
-
+                        android:padding="24dp">
+                        
+                        <ImageView
+                            android:id="@+id/iv_empty_icon"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:src="@drawable/ic_news_empty"
+                            android:alpha="0.6"
+                            android:layout_marginBottom="16dp" />
+                        
+                        <TextView
+                            android:id="@+id/tv_empty_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂无新闻"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#484d61"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <TextView
+                            android:id="@+id/tv_empty_message"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="下拉刷新获取最新资讯"
+                            android:textSize="14sp"
+                            android:textColor="#484d61"
+                            android:alpha="0.8"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                
+                <!-- 5. 底部文本 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="下面没有了~"
+                    android:textSize="14sp"
+                    android:textColor="#999999"
+                    android:layout_margin="20dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

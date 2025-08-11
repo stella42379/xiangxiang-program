@@ -222,6 +222,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LocalLife" />
 
+
         <!-- ========== 服务和元数据配置 ========== -->
 
         <!-- 高德地图API Key -->

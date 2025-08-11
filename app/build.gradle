@@ -75,8 +75,13 @@ dependencies {
     // JSON处理
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // 🎯 新增：Glide用于加载网络图片
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
+    // 🔥 添加OkHttp依赖
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0' // 可选：用于调试
+    
+    // 如果还没有，也添加Glide相关依赖修复图片加载
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     
 }

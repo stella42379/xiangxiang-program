@@ -1,4 +1,4 @@
-package com.xiangjia.locallife.ui.adapter;
+package com.xiangjia.locallife.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -152,25 +152,56 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
     
     /**
-     * 加载新闻图片
+     * 🔥 修复：加载新闻图片，处理空URL和错误
      */
     private void loadNewsImage(ImageView imageView, String imageUrl) {
         if (context == null || imageView == null) {
             return;
         }
         
+        // 🔥 调试：打印图片加载状态
+        android.util.Log.d("NewsAdapter", "加载图片: " + (TextUtils.isEmpty(imageUrl) ? "URL为空" : imageUrl));
+        
         if (!TextUtils.isEmpty(imageUrl)) {
-            // 使用Glide加载图片，带圆角和错误处理
-            Glide.with(context)
-                .load(imageUrl)
-                .apply(new RequestOptions()
-                    .transform(new RoundedCorners(16))
-                    .placeholder(android.R.drawable.ic_menu_gallery) // 系统占位图
-                    .error(android.R.drawable.ic_menu_report_image))  // 系统错误图
-                .into(imageView);
+            // 检查是否是有效的图片URL
+            if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+                // 显示图片View
+                imageView.setVisibility(View.VISIBLE);
+                
+                // 使用Glide加载图片，带圆角和错误处理
+                Glide.with(context)
+                    .load(imageUrl)
+                    .apply(new RequestOptions()
+                        .transform(new RoundedCorners(16))
+                        .placeholder(android.R.drawable.ic_menu_gallery) // 系统占位图
+                        .error(android.R.drawable.ic_menu_report_image))  // 系统错误图
+                    .listener(new com.bumptech.glide.request.RequestListener<android.graphics.drawable.Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@androidx.annotation.Nullable com.bumptech.glide.load.engine.GlideException e, 
+                                                  Object model, com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target, 
+                                                  boolean isFirstResource) {
+                            android.util.Log.e("NewsAdapter", "图片加载失败: " + imageUrl, e);
+                            return false;
+                        }
+                        
+                        @Override
+                        public boolean onResourceReady(android.graphics.drawable.Drawable resource, Object model, 
+                                                     com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target, 
+                                                     com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            android.util.Log.d("NewsAdapter", "图片加载成功: " + imageUrl);
+                            return false;
+                        }
+                    })
+                    .into(imageView);
+            } else {
+                // URL格式不正确，隐藏图片
+                android.util.Log.w("NewsAdapter", "无效的图片URL: " + imageUrl);
+                imageView.setVisibility(View.GONE);
+            }
         } else {
-            // 没有图片URL，显示默认图片
-            imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            // 没有图片URL，隐藏图片View节省空间
+            android.util.Log.d("NewsAdapter", "图片URL为空，隐藏图片");
+            imageView.setVisibility(View.GONE);
         }
     }
     
@@ -197,7 +228,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             
             // 可选的分享按钮（如果你的布局里有的话）
             try {
-                shareButton = itemView.findViewById(R.id.share_fab);
+                shareButton = itemView.findViewById(R.id.btn_share);
             } catch (Exception e) {
                 // 如果没有分享按钮就忽略
                 shareButton = null;
