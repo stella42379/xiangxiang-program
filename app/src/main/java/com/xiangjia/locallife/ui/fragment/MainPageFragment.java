@@ -50,6 +50,9 @@ public class MainPageFragment extends Fragment {
     private CardView cardEmergencyMedical;
     private CardView cardTips;
     
+    // 🆕 湘湘管家卡片 - 用于跳转到DifyFragment
+    private CardView cardXiangjiaBotChat;
+    
     // 服务列表
     private RecyclerView recyclerMaintenance;
     private RecyclerView recyclerEmergency;
@@ -105,6 +108,9 @@ public class MainPageFragment extends Fragment {
             btnSend = view.findViewById(R.id.btn_send);
             tvManagerGreeting = view.findViewById(R.id.tv_manager_greeting);
             
+            // 🆕 湘湘管家聊天卡片 - 使用实际存在的布局ID
+            cardXiangjiaBotChat = view.findViewById(R.id.layout_chat_area);
+            
             // 功能卡片
             cardDailyInspection = view.findViewById(R.id.card_daily_inspection);
             cardEmergencyMedical = view.findViewById(R.id.card_emergency_medical);
@@ -149,34 +155,107 @@ public class MainPageFragment extends Fragment {
     }
     
     /**
-     * 🎯 设置聊天区域
+     * 🎯 设置聊天区域 - 🚀 核心功能：点击跳转到DifyFragment
      */
     private void setupChatArea() {
         try {
-            // 设置聊天区域点击监听
+            // 🎯 湘湘管家聊天卡片点击 - 跳转到DifyFragment（作为新页面）
+            if (cardXiangjiaBotChat != null) {
+                cardXiangjiaBotChat.setOnClickListener(v -> {
+                    Log.d(TAG, "🤖 点击湘湘管家卡片，准备打开DifyFragment新页面");
+                    navigateToDifyFragment();
+                });
+                Log.d(TAG, "✅ 湘湘管家卡片点击监听器已设置");
+            } else {
+                Log.w(TAG, "⚠️ 湘湘管家卡片未找到，请检查布局文件中的ID");
+            }
+            
+            // 设置聊天区域点击监听 - 跳转到DifyFragment
             if (layoutChatArea != null) {
-                layoutChatArea.setOnClickListener(v -> goToChat());
+                layoutChatArea.setOnClickListener(v -> {
+                    Log.d(TAG, "💬 点击聊天区域，打开DifyFragment");
+                    navigateToDifyFragment();
+                });
             }
             
-            // 设置发送按钮点击监听
+            // 设置发送按钮点击监听 - 跳转到DifyFragment
             if (btnSend != null) {
-                btnSend.setOnClickListener(v -> onSendClick());
+                btnSend.setOnClickListener(v -> {
+                    Log.d(TAG, "📤 点击发送按钮，打开DifyFragment进行对话");
+                    navigateToDifyFragment();
+                });
             }
             
-            // 设置输入框回车发送
+            // 设置输入框回车发送 - 跳转到DifyFragment
             if (etChatInput != null) {
                 etChatInput.setOnEditorActionListener((v, actionId, event) -> {
                     if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
-                        onSendClick();
+                        Log.d(TAG, "⌨️ 输入框回车，打开DifyFragment");
+                        navigateToDifyFragment();
                         return true;
                     }
                     return false;
                 });
             }
             
-            Log.d(TAG, "🎯 聊天区域设置完成");
+            Log.d(TAG, "🎯 聊天区域设置完成 - 支持跳转到DifyFragment");
         } catch (Exception e) {
             Log.e(TAG, "❌ 设置聊天区域失败", e);
+        }
+    }
+    
+    /**
+     * 🎯 核心方法：跳转到DifyFragment（作为新页面打开，不影响底部导航）
+     */
+    private void navigateToDifyFragment() {
+        try {
+            Log.d(TAG, "🤖 准备打开湘湘管家AI助手页面");
+            
+            // 创建DifyFragment实例
+            DifyFragment difyFragment = new DifyFragment();
+            
+            // 使用Fragment事务，将DifyFragment覆盖在当前页面上
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().beginTransaction()
+                    .add(android.R.id.content, difyFragment) // 添加到根容器
+                    .addToBackStack("DifyFragment") // 添加到回退栈
+                    .setCustomAnimations(
+                        android.R.anim.slide_in_left,  // 进入动画
+                        android.R.anim.slide_out_right, // 退出动画
+                        android.R.anim.slide_in_left,   // 回退进入动画
+                        android.R.anim.slide_out_right  // 回退退出动画
+                    )
+                    .commit();
+                    
+                Log.d(TAG, "✅ DifyFragment已作为新页面打开");
+                Toast.makeText(getContext(), "🤖 湘湘管家AI助手", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // 备用方案：使用Activity方式打开（如果有DifyActivity的话）
+            if (getContext() != null) {
+                try {
+                    // 尝试启动DifyActivity（如果存在）
+                    android.content.Intent intent = new android.content.Intent();
+                    intent.setClassName(getContext(), "com.xiangjia.locallife.ui.activity.DifyActivity");
+                    intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getContext().startActivity(intent);
+                    
+                    Log.d(TAG, "✅ 使用Activity方式打开DifyFragment");
+                    Toast.makeText(getContext(), "🤖 正在打开AI助手...", Toast.LENGTH_SHORT).show();
+                    return;
+                    
+                } catch (Exception activityException) {
+                    Log.w(TAG, "DifyActivity不存在，继续使用Fragment方式", activityException);
+                }
+            }
+            
+            Log.w(TAG, "⚠️ 无法获取Fragment管理器，跳转失败");
+            Toast.makeText(getContext(), "❌ 无法打开AI助手页面", Toast.LENGTH_SHORT).show();
+            
+        } catch (Exception e) {
+            Log.e(TAG, "❌ 打开DifyFragment失败", e);
+            Toast.makeText(getContext(), "❌ 打开失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -193,6 +272,11 @@ public class MainPageFragment extends Fragment {
             // 紧急送医卡片 - 只保留整体点击
             if (cardEmergencyMedical != null) {
                 cardEmergencyMedical.setOnClickListener(v -> startEmergencyCall());
+            }
+            
+            // 温馨提示卡片点击
+            if (cardTips != null) {
+                cardTips.setOnClickListener(v -> showTipsDetail());
             }
             
             Log.d(TAG, "🎯 功能卡片设置完成 - 移除了按钮处理");
@@ -348,35 +432,14 @@ public class MainPageFragment extends Fragment {
     }
     
     /**
-     * 🎯 发送消息
+     * 显示温馨提示详情
      */
-    private void onSendClick() {
-        if (etChatInput != null) {
-            String message = etChatInput.getText().toString().trim();
-            if (!message.isEmpty()) {
-                Log.d(TAG, "📤 发送消息: " + message);
-                Toast.makeText(getContext(), "消息已发送: " + message, Toast.LENGTH_SHORT).show();
-                etChatInput.setText("");
-                
-                // 跳转到聊天页面
-                goToChat();
-            } else {
-                Toast.makeText(getContext(), "请输入消息", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    
-    /**
-     * 🎯 跳转到聊天页面
-     */
-    private void goToChat() {
+    private void showTipsDetail() {
         try {
-            Toast.makeText(getContext(), "即将跳转到聊天页面", Toast.LENGTH_SHORT).show();
-            // TODO: 启动ChatActivity
-            // Intent intent = new Intent(getActivity(), ChatActivity.class);
-            // startActivity(intent);
+            Log.d(TAG, "💡 显示温馨提示详情");
+            Toast.makeText(getContext(), "💡 查看更多社区公告和提示...", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.e(TAG, "❌ 跳转到聊天页面失败", e);
+            Log.e(TAG, "❌ 显示提示详情失败", e);
         }
     }
     

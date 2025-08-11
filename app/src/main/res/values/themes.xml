@@ -136,4 +136,77 @@
 
     <!-- 给 Manifest 用的那个名字，直接继承上面的主题 -->
     <style name="XiangJiaTheme.NoActionBar" parent="@style/XiangJiaTheme"/>
+    
+    <!-- ========== 聊天界面样式 (新增) ========== -->
+    
+    <!-- 聊天消息文本样式 -->
+    <style name="ChatMessageText">
+        <item name="android:textSize">@dimen/text_size_message</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+    
+    <style name="ChatMessageText.User">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="ChatMessageText.AI">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <style name="ChatMessageText.Error">
+        <item name="android:textColor">@color/error_text</item>
+    </style>
+    
+    <!-- 时间戳样式 -->
+    <style name="ChatTimeStamp">
+        <item name="android:textSize">@dimen/text_size_time</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- 聊天输入框样式 -->
+    <style name="ChatInputText">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:padding">@dimen/input_area_padding</item>
+        <item name="android:minHeight">@dimen/input_min_height</item>
+        <item name="android:maxLines">4</item>
+    </style>
+    
+    <!-- 发送按钮样式 -->
+    <style name="SendButton">
+        <item name="android:layout_width">@dimen/send_button_size</item>
+        <item name="android:layout_height">@dimen/send_button_size</item>
+        <item name="android:background">@drawable/send_button_background</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:padding">12dp</item>
+    </style>
+    
+    <!-- 重试按钮样式 -->
+    <style name="RetryButton">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:background">@drawable/retry_button_background</item>
+        <item name="android:padding">@dimen/retry_button_padding</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    
+    <!-- 聊天头像样式 -->
+    <style name="ChatAvatar">
+        <item name="android:layout_width">@dimen/avatar_size</item>
+        <item name="android:layout_height">@dimen/avatar_size</item>
+        <item name="android:background">@drawable/avatar_background</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    
+    <!-- 聊天卡片样式 -->
+    <style name="ChatCard">
+        <item name="android:layout_margin">@dimen/message_spacing</item>
+        <item name="android:background">@color/card_background</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+    
 </resources>

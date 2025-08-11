@@ -7,10 +7,10 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/ai_avatar"
+        android:id="@+id/error_icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:src="@drawable/ic_ai_avatar"
+        android:src="@drawable/ic_error"
         android:background="@drawable/avatar_background"
         android:scaleType="centerCrop"
         android:layout_marginEnd="8dp"
@@ -22,24 +22,29 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/ai_message_text"
+            android:id="@+id/error_message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="280dp"
-            android:text="AI回复"
+            android:text="错误信息"
             android:textSize="14sp"
-            android:textColor="@color/text_primary"
-            android:background="@drawable/chat_bubble_ai"
+            android:textColor="@color/error_text"
+            android:background="@drawable/chat_bubble_error"
             android:padding="12dp"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/ai_message_time"
+            android:id="@+id/retry_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10:30"
-            android:textSize="11sp"
-            android:textColor="@android:color/darker_gray" />
+            android:text="点击重试"
+            android:textSize="12sp"
+            android:textColor="@color/primary_color"
+            android:background="@drawable/retry_button_background"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 

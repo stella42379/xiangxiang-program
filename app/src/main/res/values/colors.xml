@@ -7,7 +7,7 @@
     <color name="primary_light">#BBDEFB</color>
     <color name="accent_color">#FF4081</color>
     
-    <!-- ============ 登录页面专用颜色（新增）============ -->
+    <!-- ============ 登录页面专用颜色 ============ -->
     <!-- 登录渐变色彩 - 参考小程序设计 -->
     <color name="login_gradient_start">#6366F1</color>
     <color name="login_gradient_center">#8B5CF6</color>
@@ -30,6 +30,10 @@
     <color name="background_card">#FFFFFF</color>
     <color name="card_background">#FFFFFF</color>
     <color name="glass_background">#80FFFFFF</color>
+    <color name="page_background">#FFFFFF</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_gray">#FAFAFA</color>
     
     <!-- ============ 文本颜色系 ============ -->
     <color name="text_primary">#FF212121</color>
@@ -43,6 +47,8 @@
     <!-- ============ 边框和分割线 ============ -->
     <color name="divider_color">#FFE0E0E0</color>
     <color name="border_color">#FFE0E0E0</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="divider_light">#F0F0F0</color>
     
     <!-- ============ 底部导航颜色 ============ -->
     <color name="bottom_nav_selected">#2d8cf0</color>
@@ -51,39 +57,66 @@
     <!-- ============ 渐变色彩 ============ -->
     <color name="gradient_start">#FFB6C1</color>
     <color name="gradient_end">#87CEEB</color>
+    <color name="background_gradient_start">#667eea</color>
+    <color name="background_gradient_end">#764ba2</color>
     
     <!-- ============ 状态颜色 ============ -->
     <color name="success_color">#FF4CAF50</color>
     <color name="success_green">#4CAF50</color>
+    <color name="success">#4CAF50</color>
     <color name="warning_color">#FFFF9800</color>
     <color name="warning_orange">#FF9800</color>
+    <color name="warning">#FF9800</color>
     <color name="error_color">#FFF44336</color>
     <color name="error_red">#F44336</color>
+    <color name="error">#F44336</color>
     <color name="info_color">#FF2196F3</color>
+    <color name="info">#2196F3</color>
     
     <!-- ============ 按钮颜色 ============ -->
     <color name="button_primary">#FF2196F3</color>
     <color name="button_primary_pressed">#FF1976D2</color>
     <color name="button_secondary">#FFE0E0E0</color>
     <color name="button_danger">#FFF44336</color>
+    <color name="button_disabled">#CCCCCC</color>
     
-    <!-- ============ AI聊天界面颜色 ============ -->
+    <!-- ============ AI聊天界面颜色 (新增和更新) ============ -->
     <color name="ai_bubble_background">#E3F2FD</color>
     <color name="chat_ai_bubble">#FFF5F5F5</color>
+    <color name="chat_bubble_ai">#F5F5F5</color>
+    <color name="chat_bubble_border">#E0E0E0</color>
     <color name="user_bubble_background">#2d8cf0</color>
     <color name="chat_user_bubble">#FF2196F3</color>
     <color name="chat_background">#FFFAFAFA</color>
+    
+    <!-- 聊天错误相关颜色 (新增) -->
+    <color name="error_background">#FFEBEE</color>
+    <color name="error_border">#FFCDD2</color>
+    <color name="error_text">#D32F2F</color>
+    
+    <!-- 聊天头像和重试按钮颜色 (新增) -->
+    <color name="avatar_background">#E8F5E8</color>
+    <color name="retry_button_normal">#FFFFFF</color>
+    <color name="retry_button_pressed">#F0F0F0</color>
+    
+    <!-- 输入框颜色 (新增) -->
+    <color name="input_background">#F9FAFB</color>
+    <color name="input_border">#D1D5DB</color>
+    <color name="input_border_focused">#2d8cf0</color>
+    <color name="input_text">#1F2937</color>
+    <color name="input_hint">#9CA3AF</color>
     
     <!-- ============ 透明度颜色 ============ -->
     <color name="transparent">#00000000</color>
     <color name="semi_transparent_black">#80000000</color>
     <color name="semi_transparent_white">#80FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_20">#33000000</color>
     
     <!-- ============ 阴影颜色 ============ -->
     <color name="shadow_color">#20000000</color>
-
-    <color name="background_gradient_start">#667eea</color>
-    <color name="background_gradient_end">#764ba2</color>
+    <color name="card_shadow">#1A000000</color>
     
     <!-- ============ 新闻模块专用颜色 ============ -->
     <!-- 新闻页面主色调 - 对应小程序新闻页面 -->
@@ -98,10 +131,7 @@
     <!-- 新闻背景颜色 -->
     <color name="news_background_primary">#FFFFFF</color>
     <color name="news_background_secondary">#F8F9FA</color>
-
-    <!-- 新闻页面专用颜色 -->
     <color name="news_background">#F8F9FA</color>
-    <color name="news_card_shadow">#1A000000</color>
     
     <!-- 新闻毛玻璃效果颜色 -->
     <color name="news_glass_card">#47FFFFFF</color>           <!-- 新闻卡片毛玻璃背景 -->
@@ -118,7 +148,6 @@
     <color name="news_success_color">#4CAF50</color>
     <color name="news_warning_color">#FF9800</color>
     <color name="news_error_color">#F44336</color>
-
     
     <!-- 半透明颜色 -->
     <color name="overlay_light">#80FFFFFF</color>
@@ -130,31 +159,10 @@
     <!-- 新闻来源图标背景 -->
     <color name="news_source_icon_bg">#33FFFFFF</color>
 
-    <!-- 新增论坛相关颜色 -->
+    <!-- ============ 论坛相关颜色 ============ -->
     <color name="primary">#2d8cf0</color>
     <color name="accent">#FF4081</color>
     <color name="accent_light">#FFB2DD</color>
-    
-    <!-- 背景颜色 -->
-    <color name="background_light">#F5F5F5</color>
-    <color name="background_white">#FFFFFF</color>
-    <color name="background_gray">#FAFAFA</color>
-    
-    
-    <!-- 透明度颜色 -->
-    <color name="white_70">#B3FFFFFF</color>
-    <color name="black_50">#80000000</color>
-    <color name="black_20">#33000000</color>
-    
-    <!-- 分割线颜色 -->
-    <color name="divider">#E0E0E0</color>
-    <color name="divider_light">#F0F0F0</color>
-    
-    <!-- 状态颜色 -->
-    <color name="success">#4CAF50</color>
-    <color name="warning">#FF9800</color>
-    <color name="error">#F44336</color>
-    <color name="info">#2196F3</color>
     
     <!-- 分类颜色 -->
     <color name="category_discussion">#2196F3</color>
@@ -163,10 +171,6 @@
     <color name="category_share">#4CAF50</color>
     <color name="category_announcement">#9C27B0</color>
     <color name="category_default">#607D8B</color>
-    
-    <!-- 卡片阴影 -->
-    <color name="card_shadow">#1A000000</color>
-    
     
     <!-- 在线状态颜色 -->
     <color name="online">#4CAF50</color>
@@ -177,14 +181,7 @@
     <color name="like_active">#F44336</color>
     <color name="like_inactive">#9E9E9E</color>
 
-    <!-- ============ 输入框颜色（新增）============ -->
-    <color name="input_background">#F9FAFB</color>
-    <color name="input_border">#D1D5DB</color>
-    <color name="input_border_focused">#2d8cf0</color>
-    <color name="input_text">#1F2937</color>
-    <color name="input_hint">#9CA3AF</color>
-    
-    <!-- ============ Material Design 标准色彩（新增）============ -->
+    <!-- ============ Material Design 标准色彩 ============ -->
     <color name="colorPrimary">@color/primary_color</color>
     <color name="colorPrimaryDark">@color/primary_dark</color>
     <color name="colorAccent">@color/accent_color</color>
@@ -193,11 +190,11 @@
     <color name="colorOnSurface">@color/text_primary</color>
     <color name="colorOnBackground">@color/text_primary</color>
 
-    <!-- 你想要的状态栏/导航栏颜色；先给个安全默认 -->
+    <!-- 状态栏/导航栏颜色 -->
     <color name="status_bar">#000000</color>
     <color name="navigation_bar">#000000</color>
 
-    <!-- 🎯 毛玻璃效果专用颜色 -->
+    <!-- ============ 毛玻璃效果专用颜色 ============ -->
     <color name="glass_white_10">#1AFFFFFF</color>   <!-- 10%透明白色 -->
     <color name="glass_white_20">#33FFFFFF</color>   <!-- 20%透明白色 -->
     <color name="glass_white_25">#40FFFFFF</color>   <!-- 25%透明白色 -->
@@ -205,7 +202,7 @@
     <color name="glass_white_40">#66FFFFFF</color>   <!-- 40%透明白色 -->
     <color name="glass_white_50">#80FFFFFF</color>   <!-- 50%透明白色 -->
     
-    <!-- 🎯 毛玻璃卡片背景色 -->
+    <!-- 毛玻璃卡片背景色 -->
     <color name="glass_blue_50">#804FC3F7</color>    <!-- 50%透明蓝色 -->
     <color name="glass_blue_dark_50">#8029B6F6</color> <!-- 50%透明深蓝色 -->
     <color name="glass_red_50">#80FF6B6B</color>     <!-- 50%透明红色 -->
@@ -213,10 +210,10 @@
     <color name="glass_coral_50">#80FFAB91</color>   <!-- 50%透明珊瑚色 -->
     <color name="glass_pink_50">#80FFCDD2</color>    <!-- 50%透明粉色 -->
 
-    <!-- 🎯 文字阴影颜色 -->
+    <!-- 文字阴影颜色 -->
     <color name="text_shadow_light">#40000000</color> <!-- 25%透明黑色 -->
     <color name="text_shadow_dark">#60000000</color>  <!-- 37.5%透明黑色 -->
-    <color name="page_background">#FFFFFF</color>
+    
     <!-- 毛玻璃风格颜色 -->
     <color name="glass_background_strong">#B3FFFFFF</color>
     <color name="glass_background_light">#80FFFFFF</color>
@@ -244,5 +241,7 @@
     <color name="success_glass">#80059669</color>
     <color name="error_glass">#80DC2626</color>
     <color name="warning_glass">#80D97706</color>
+
+    <color name="primary_color_dark">#1976d2</color>
 
 </resources>
