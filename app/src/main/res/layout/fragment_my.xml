@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +28,7 @@
                 android:layout_height="60dp"
                 android:src="@android:drawable/ic_menu_send"
                 android:contentDescription="@string/user_avatar"
-                android:background="@drawable/glass_card_background" />
+                android:background="@android:color/white" />
 
             <LinearLayout
                 android:layout_width="0dp"
