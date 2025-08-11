@@ -1,62 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_page_background"
     android:fillViewport="true">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-        
-        <!-- 欢迎区域 - 对应小程序的seal_group -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
-            
-            <TextView
-                android:id="@+id/tv_welcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="欢迎回来！"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_text" />
-            
-            <TextView
-                android:id="@+id/tv_welcome_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome Back!"
-                android:textSize="16sp"
-                android:textColor="@color/secondary_text"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-        
-        <!-- 湘湘管家对话区域 - 对应小程序的seal_group_1 -->
-        <androidx.cardview.widget.CardView
+        android:paddingStart="@dimen/page_padding_h"
+        android:paddingEnd="@dimen/page_padding_h">
+
+        <include layout="@layout/include_header_orange" />
+
+        <!-- 湘湘管家对话区域 -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/layout_chat_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:backgroundTint="#80FFFFFF">
-            
+            android:layout_marginTop="@dimen/section_gap_top"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="6dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
-                
+                android:padding="@dimen/card_padding">
+
                 <!-- 管家介绍 -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -64,21 +36,21 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
-                    
+
                     <ImageView
                         android:id="@+id/iv_manager_avatar"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_profile"
                         android:background="@drawable/circle_background" />
-                    
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:layout_marginStart="12dp">
-                        
+
                         <TextView
                             android:id="@+id/tv_manager_name"
                             android:layout_width="wrap_content"
@@ -87,7 +59,7 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/primary_text" />
-                        
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -97,7 +69,7 @@
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </LinearLayout>
-                
+
                 <!-- 管家问候 -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -105,13 +77,13 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
-                    
+
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_profile"
                         android:background="@drawable/circle_background" />
-                    
+
                     <TextView
                         android:id="@+id/tv_manager_greeting"
                         android:layout_width="0dp"
@@ -124,8 +96,8 @@
                         android:background="@drawable/chat_bubble_ai"
                         android:padding="12dp" />
                 </LinearLayout>
-                
-                <!-- 输入区域 - 对应小程序的输入框 -->
+
+                <!-- 输入区域 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +105,7 @@
                     android:gravity="center_vertical"
                     android:background="@drawable/input_area_background"
                     android:padding="8dp">
-                    
+
                     <EditText
                         android:id="@+id/et_chat_input"
                         android:layout_width="0dp"
@@ -147,7 +119,7 @@
                         android:textColorHint="@color/hint_text"
                         android:maxLines="1"
                         android:imeOptions="actionSend" />
-                    
+
                     <Button
                         android:id="@+id/btn_send"
                         android:layout_width="40dp"
@@ -159,40 +131,16 @@
                         android:padding="0dp" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        
-        <!-- 主要业务标题 - 对应小程序的signup_2 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="主要业务"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_text" />
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="主要的一些功能"
-                android:textSize="14sp"
-                android:textColor="@color/secondary_text"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-        
-        <!-- 维修服务轮播 - 对应小程序的maintenanceSwiper -->
-        <androidx.cardview.widget.CardView
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 维修服务轮播 -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
-            
+            android:layout_marginTop="@dimen/section_gap_top"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/card_elevation">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_maintenance"
                 android:layout_width="match_parent"
@@ -200,16 +148,16 @@
                 android:clipToPadding="false"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
-        </androidx.cardview.widget.CardView>
-        
-        <!-- 紧急服务轮播 - 对应小程序的emergencySwiper -->
-        <androidx.cardview.widget.CardView
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 紧急服务轮播 -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
-            
+            android:layout_marginTop="@dimen/section_gap_top"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/card_elevation">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_emergency"
                 android:layout_width="match_parent"
@@ -217,9 +165,8 @@
                 android:clipToPadding="false"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
-        </androidx.cardview.widget.CardView>
-        
-        <!-- 底部提示 -->
+        </com.google.android.material.card.MaterialCardView>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -227,7 +174,8 @@
             android:textSize="14sp"
             android:textColor="@color/hint_text"
             android:gravity="center"
-            android:layout_marginTop="20dp" />
-        
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
