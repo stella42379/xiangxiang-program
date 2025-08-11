@@ -135,7 +135,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/XiangJiaTheme.NoActionBar"
             android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            tools:ignore="AppLinkUrlError">
             
             <!-- 添加返回导航支持 -->
             <meta-data
