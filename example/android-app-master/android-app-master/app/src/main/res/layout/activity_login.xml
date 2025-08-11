@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/login_a"
+    tools:context=".activity.LoginActivity">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/default_hand"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="育才培训"
+        android:textSize="18dp" />
+
+    <EditText
+        android:id="@+id/edt_user_login_activity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/register_psw_bg"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:drawableLeft="@mipmap/user_name_icon"
+        android:drawablePadding="10dp"
+        android:paddingLeft="8dp"
+        android:gravity="center_vertical"
+        android:hint="请输入手机号"
+        android:textColorHint="#a3a3a3"
+        android:textColor="#000000"
+        android:textSize="16sp"/>
+
+
+    <EditText
+        android:id="@+id/edt_psw_login_activity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/register_psw_bg"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:drawableLeft="@mipmap/psw_icon"
+        android:drawablePadding="10dp"
+        android:paddingLeft="8dp"
+        android:gravity="center_vertical"
+        android:inputType="textPassword"
+        android:hint="请输入密码"
+        android:textColorHint="#a3a3a3"
+        android:textColor="#000000"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_login_activity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="35dp"
+        android:background="@drawable/ic_selected_background"
+        android:text="登录"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="立即注册"
+            android:gravity="center_horizontal"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_find_psw"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="找回密码"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"/>
+    </LinearLayout>
+
+</LinearLayout>

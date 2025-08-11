@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/login_a">
+
+    <include layout="@layout/main_title_bars"/>
+
+    <EditText
+        android:id="@+id/et_old_psw_modify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/register_psw_bg"
+        android:drawableLeft="@mipmap/psw_icon"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:hint="请输入原始密码"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/et_new_psw_modify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/register_psw_bg"
+        android:drawableLeft="@mipmap/psw_icon"
+        android:drawablePadding="10dp"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:hint="请输入新密码"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/et_new_psw_again_modify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/register_psw_bg"
+        android:drawableLeft="@mipmap/psw_icon"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:hint="请再次输入新密码"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btn_modify_psw"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:background="@drawable/ic_selected_background"
+        android:text="保存"
+        android:textSize="14sp"/>
+
+
+</LinearLayout>
+
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/info_layout_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/holo_blue_dark"
+        android:layout_height="56dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="每日一练"
+            android:textSize="24dp"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/iv_black_activity_analogy_examination"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/go_back_selector"/>
+
+        <com.example.yinggutest.mianpage.fragment.everypractice.view.CountDownCircleView
+            android:id="@+id/ccv_black_activity_analogy_examination"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/vote_submit_relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.yinggutest.mianpage.fragment.everypractice.view.VoteSubmitViewPager
+            android:id="@+id/vote_submit_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp" />
+
+        <LinearLayout
+            android:id="@+id/vote_submit_linear_dot"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal" />
+    </RelativeLayout>
+
+</RelativeLayout>

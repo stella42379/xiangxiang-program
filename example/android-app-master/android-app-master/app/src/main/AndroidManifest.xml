@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.yinggutest">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".coursefragment.AddActivity"></activity>
+        <activity android:name=".forum.util.TakePhotosActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".myinfo.activity.SecurityActivity" />
+        <activity android:name=".myinfo.activity.ModifyPswActivity" />
+        <activity android:name=".coursefragment.ArticleDetailsActivity" />
+        <activity android:name=".forum.NewsReleaseActivity" />
+        <activity android:name=".forum.ForumFragmentSencond" />
+        <activity android:name=".mianpage.fragment.truetitle.TrueTitleActivity" />
+        <activity android:name=".myinfo.activity.AboutUsActivity" />
+        <activity android:name=".myinfo.activity.FindbackActivity" />
+        <activity android:name="forum.NewsReleaseActivity" />
+        <activity android:name="forum.ForumFragmentSencond" />
+        <activity android:name=".AnalusisQuestion" />
+        <activity android:name=".AnalysisErrorQuestion" />
+        <activity android:name=".PracticeReport" />
+        <activity android:name=".mianpage.fragment.everypractice.AnalogyExaminationActivity" />
+        <activity android:name=".mianpage.fragment.simulation.SimulationActivity" />
+        <activity android:name=".myinfo.login.RegisterActivity" />
+        <activity android:name=".myinfo.activity.UserInfoActivity" />
+        <activity android:name=".myinfo.login.FindPswActivity" />
+        <activity android:name=".myinfo.login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".myinfo.SettingActivity" />
+        <activity android:name=".myinfo.activity.ChangeUserInfoActivity" />
+        <activity android:name=".mianpage.fragment.wrongtopic.WrongTopicBook" />
+        <activity android:name=".mianpage.fragment.wrongtopic.WrongTopic" />
+        <activity android:name=".MainActivity" />
+    </application>
+
+</manifest>

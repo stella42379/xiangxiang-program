@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    给textview设置颜色selector。textview有状态state_selected，没有checked状态
+    -->
+    <item android:color="#F08080" android:state_selected="true"/>
+    <item android:color="#BC8F8F" android:state_selected="false"/>
+    <!--此处注意   这行代码放到第一行，很有可能没效果-->
+    <!--为什么会没有效果？
+    匹配条目的时候，系统发现了一条可以匹配上的条目，就不向下寻找了。
+    什么情况都可以匹配到默认条目。
+    -->
+    <item android:color="#000"/>
+</selector>
