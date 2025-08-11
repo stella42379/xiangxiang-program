@@ -2,6 +2,7 @@ package com.xiangjia.locallife.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +27,18 @@ import com.xiangjia.locallife.R;
 import com.xiangjia.locallife.ui.activity.CreatePostActivity;
 import com.xiangjia.locallife.ui.activity.PostDetailActivity;
 import com.xiangjia.locallife.ui.activity.DataInitActivity;
+import com.xiangjia.locallife.ui.activity.SearchActivity;
 import com.xiangjia.locallife.ui.adapter.ForumPostAdapter;
 import com.xiangjia.locallife.model.ForumPost;
+import com.xiangjia.locallife.model.User;
 import com.xiangjia.locallife.database.AppDatabase;
 import com.xiangjia.locallife.database.ForumPostDao;
 import com.xiangjia.locallife.util.SharedPrefsUtil;
+
+// 新增的高级功能导入
+import com.xiangjia.locallife.service.ForumDataStream;
+import com.xiangjia.locallife.service.ForumSearchManager;
+import com.xiangjia.locallife.factory.ForumPostFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 论坛Fragment
+ * 论坛Fragment - 集成高级功能
  * 在底部导航的第三个页面显示论坛功能
  */
 public class ForumFragment extends Fragment {
@@ -58,6 +66,10 @@ public class ForumFragment extends Fragment {
     private List<ForumPost> postList;
     private ForumPostDao forumPostDao;
     private ExecutorService executor;
+    
+    // 高级功能
+    private ForumDataStream dataStream;
+    private ForumSearchManager searchManager;
     
     // 当前状态
     private String currentCategory = "all";
@@ -105,6 +117,89 @@ public class ForumFragment extends Fragment {
             
             postList = new ArrayList<>();
             postAdapter = new ForumPostAdapter(getContext(), postList);
+            
+            // 初始化高级功能
+            initAdvancedFeatures();
+        }
+    }
+    
+    /**
+     * 初始化高级功能
+     */
+    private void initAdvancedFeatures() {
+        try {
+            // 1. 初始化数据流 (Observer Pattern + Singleton Pattern)
+            dataStream = ForumDataStream.getInstance(AppDatabase.getInstance(getContext()));
+            dataStream.addObserver(this::onDataStreamUpdated);
+            dataStream.startDataStream();
+            
+            // 2. 初始化搜索管理器 (Singleton Pattern + Strategy Pattern)
+            searchManager = ForumSearchManager.getInstance();
+            searchManager.setAdvancedSearch(true); // 使用高级搜索
+            
+            Log.d(TAG, "高级功能初始化完成");
+            Log.d(TAG, "当前搜索策略: " + searchManager.getCurrentStrategyName());
+            
+        } catch (Exception e) {
+            Log.e(TAG, "高级功能初始化失败", e);
+            Toast.makeText(getContext(), "高级功能初始化失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    /**
+     * 数据流更新回调 (Observer Pattern 实现)
+     */
+    private void onDataStreamUpdated(ForumDataStream.DataStreamEvent event) {
+        if (getContext() == null) return;
+        
+        switch (event.getType()) {
+            case POSTS_UPDATED:
+                @SuppressWarnings("unchecked")
+                List<ForumPost> updatedPosts = (List<ForumPost>) event.getData();
+                updatePostList(updatedPosts);
+                Log.d(TAG, "数据流更新: " + event.getMessage());
+                break;
+                
+            case MESSAGES_UPDATED:
+                // 消息更新，可以在这里处理消息相关的UI更新
+                Log.d(TAG, "消息更新: " + event.getMessage());
+                break;
+                
+            case ERROR:
+                Toast.makeText(getContext(), "数据更新失败: " + event.getMessage(), Toast.LENGTH_SHORT).show();
+                break;
+                
+            case STREAM_STOPPED:
+                Log.d(TAG, "数据流已停止");
+                break;
+        }
+    }
+    
+    /**
+     * 更新帖子列表
+     */
+    private void updatePostList(List<ForumPost> updatedPosts) {
+        if (updatedPosts != null && !updatedPosts.isEmpty()) {
+            // 智能更新：只添加新帖子，避免重复
+            List<String> existingIds = new ArrayList<>();
+            for (ForumPost post : postList) {
+                existingIds.add(post.getPostId());
+            }
+            
+            int newPostsCount = 0;
+            for (ForumPost post : updatedPosts) {
+                if (!existingIds.contains(post.getPostId())) {
+                    postList.add(0, post); // 添加到顶部
+                    newPostsCount++;
+                }
+            }
+            
+            if (newPostsCount > 0) {
+                postAdapter.notifyDataSetChanged();
+                // 显示更新提示
+                String message = "发现 " + newPostsCount + " 条新帖子";
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
@@ -116,6 +211,15 @@ public class ForumFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         recyclerView = view.findViewById(R.id.recycler_view_posts);
         fabCreatePost = view.findViewById(R.id.fab_create_post);
+        
+        // 添加搜索按钮
+        View searchButton = view.findViewById(R.id.btn_search);
+        if (searchButton != null) {
+            searchButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                startActivity(intent);
+            });
+        }
     }
     
     /**
@@ -193,10 +297,14 @@ public class ForumFragment extends Fragment {
     private void setupListeners() {
         // 下拉刷新
         swipeRefreshLayout.setOnRefreshListener(() -> {
+            // 手动触发数据流更新
+            if (dataStream != null) {
+                dataStream.forceUpdate();
+            }
             loadPosts();
         });
         
-        // 创建帖子按钮
+        // 创建帖子按钮 - 使用 Factory Pattern
         fabCreatePost.setOnClickListener(v -> {
             // 检查用户是否已登录
             if (!SharedPrefsUtil.isLoggedIn(getContext())) {
@@ -217,11 +325,11 @@ public class ForumFragment extends Fragment {
         
         executor.execute(() -> {
             try {
-                int userCount = forumPostDao.getTotalPostCount();
+                int postCount = forumPostDao.getTotalPostCount();
                 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        if (userCount == 0) {
+                        if (postCount == 0) {
                             // 没有数据，显示初始化提示
                             showInitDataPrompt();
                         } else {
@@ -254,7 +362,7 @@ public class ForumFragment extends Fragment {
     }
     
     /**
-     * 加载帖子数据
+     * 加载帖子数据 - 修改避免全是置顶帖
      */
     private void loadPosts() {
         if (executor == null || swipeRefreshLayout == null) return;
@@ -266,32 +374,27 @@ public class ForumFragment extends Fragment {
             
             try {
                 if (!currentSearchQuery.isEmpty()) {
-                    // 搜索模式
-                    posts = forumPostDao.searchPosts(currentSearchQuery);
+                    // 搜索模式 - 使用高级搜索
+                    performAdvancedSearch(currentSearchQuery);
+                    return;
                 } else if ("all".equals(currentCategory)) {
-                    // 所有分类
-                    switch (currentSort) {
-                        case "latest":
-                            posts = forumPostDao.getLatestPosts(50);
-                            break;
-                        case "popular":
-                            posts = forumPostDao.getPopularPosts(50);
-                            break;
-                        default:
-                            posts = forumPostDao.getAllPostsSortedByActivity();
-                            break;
+                    // 获取普通帖子
+                    List<ForumPost> normalPosts = forumPostDao.getAllPostsSortedByActivity();
+                    posts.addAll(normalPosts);
+                    
+                    // 只在按活动时间排序时显示置顶帖，并限制数量
+                    if ("activity".equals(currentSort)) {
+                        List<ForumPost> pinnedPosts = forumPostDao.getPinnedPosts();
+                        // 限制置顶帖数量为3个
+                        if (pinnedPosts.size() > 3) {
+                            pinnedPosts = pinnedPosts.subList(0, 3);
+                        }
+                        // 置顶帖放在最前面
+                        posts.addAll(0, pinnedPosts);
                     }
                 } else {
                     // 特定分类
                     posts = forumPostDao.getPostsByCategory(currentCategory);
-                }
-                
-                // 添加置顶帖子到顶部
-                if (currentSort.equals("activity") && currentSearchQuery.isEmpty()) {
-                    List<ForumPost> pinnedPosts = forumPostDao.getPinnedPosts();
-                    if (!pinnedPosts.isEmpty()) {
-                        posts.addAll(0, pinnedPosts);
-                    }
                 }
                 
             } catch (Exception e) {
@@ -310,6 +413,53 @@ public class ForumFragment extends Fragment {
                     if (finalPosts.isEmpty()) {
                         Toast.makeText(getContext(), "暂无帖子数据", Toast.LENGTH_SHORT).show();
                     }
+                });
+            }
+        });
+    }
+    
+    /**
+     * 执行高级搜索 - 使用新的搜索管理器
+     */
+    private void performAdvancedSearch(String query) {
+        if (searchManager == null) {
+            Toast.makeText(getContext(), "搜索功能未初始化", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        executor.execute(() -> {
+            try {
+                // 获取所有帖子
+                List<ForumPost> allPosts = forumPostDao.getAllPostsSortedByActivity();
+                
+                // 执行搜索 (使用 Strategy Pattern)
+                ForumSearchManager.SearchResult result = searchManager.search(query, allPosts);
+                
+                getActivity().runOnUiThread(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    
+                    if (result.isSuccess()) {
+                        // 更新搜索结果
+                        postList.clear();
+                        postList.addAll(result.getResults());
+                        postAdapter.notifyDataSetChanged();
+                        
+                        // 显示搜索结果统计
+                        String message = result.getResultSummary();
+                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                        
+                        Log.d(TAG, "搜索完成: " + message);
+                        Log.d(TAG, "使用策略: " + searchManager.getCurrentStrategyName());
+                    } else {
+                        Toast.makeText(getContext(), result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getContext(), "搜索出错: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -366,31 +516,81 @@ public class ForumFragment extends Fragment {
         });
     }
     
+    /**
+     * 切换搜索策略（可选，用于测试）
+     */
+    public void toggleSearchStrategy() {
+        if (searchManager != null) {
+            boolean isAdvanced = searchManager.isUsingAdvancedSearch();
+            searchManager.setAdvancedSearch(!isAdvanced);
+            
+            String newStrategy = searchManager.getCurrentStrategyName();
+            Toast.makeText(getContext(), "切换到: " + newStrategy, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "搜索策略切换到: " + newStrategy);
+        }
+    }
+    
+    /**
+     * 创建演示帖子的方法（可选，用于测试 Factory Pattern）
+     */
+    private void createDemoPosts() {
+        executor.execute(() -> {
+            try {
+                // 获取当前用户（简化处理）
+                User currentUser = new User("demo_user", "demo@example.com", "password");
+                currentUser.setNickname("演示用户");
+                
+                // 使用 Factory Pattern 创建不同类型的帖子
+                ForumPost helpPost = ForumPostFactory.createTemplatePost(ForumPostFactory.PostType.HELP, currentUser);
+                ForumPost sharePost = ForumPostFactory.createTemplatePost(ForumPostFactory.PostType.SHARE, currentUser);
+                ForumPost friendsPost = ForumPostFactory.createTemplatePost(ForumPostFactory.PostType.FRIENDS, currentUser);
+                
+                // 保存到数据库
+                forumPostDao.insert(helpPost);
+                forumPostDao.insert(sharePost);
+                forumPostDao.insert(friendsPost);
+                
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "演示帖子创建完成", Toast.LENGTH_SHORT).show();
+                    loadPosts(); // 刷新列表
+                });
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "创建演示帖子失败", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+    
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_forum, menu);
         
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
-        
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    currentSearchQuery = query;
-                    loadPosts();
-                    return true;
-                }
-                
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (newText.isEmpty()) {
-                        currentSearchQuery = "";
-                        loadPosts();
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+            
+            if (searchView != null) {
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        currentSearchQuery = query;
+                        performAdvancedSearch(query);
+                        return true;
                     }
-                    return true;
-                }
-            });
+                    
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty()) {
+                            currentSearchQuery = "";
+                            loadPosts();
+                        }
+                        return true;
+                    }
+                });
+            }
         }
         
         super.onCreateOptionsMenu(menu, inflater);
@@ -437,8 +637,18 @@ public class ForumFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        
+        // 停止数据流
+        if (dataStream != null) {
+            dataStream.removeObserver(this::onDataStreamUpdated);
+            dataStream.stopDataStream();
+        }
+        
+        // 清理线程池
         if (executor != null && !executor.isShutdown()) {
             executor.shutdown();
         }
+        
+        Log.d(TAG, "ForumFragment destroyed, 资源已清理");
     }
 }

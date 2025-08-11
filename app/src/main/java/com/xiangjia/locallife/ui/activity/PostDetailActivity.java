@@ -240,22 +240,29 @@ public class PostDetailActivity extends AppCompatActivity {
         executor.execute(() -> {
             try {
                 currentPost = forumPostDao.getPostById(postId);
-                
-                if (currentPost != null) {
+                if (currentPost == null) {
                     runOnUiThread(() -> {
-                        displayPostContent();
-                        loadMessages();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "帖子不存在或已被删除", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "帖子不存在", Toast.LENGTH_SHORT).show();
                         finish();
                     });
+                    return;
                 }
+                
+                // 增加浏览数
+                int newViewCount = currentPost.getViewCount() + 1;
+                forumPostDao.updateViewCount(postId, newViewCount);
+                currentPost.setViewCount(newViewCount);
+                
+                runOnUiThread(() -> {
+                    displayPostContent();
+                    loadMessages();
+                });
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
                     Toast.makeText(this, "加载帖子失败", Toast.LENGTH_SHORT).show();
+                    finish();
                 });
             }
         });
@@ -267,31 +274,25 @@ public class PostDetailActivity extends AppCompatActivity {
     private void displayPostContent() {
         if (currentPost == null) return;
         
-        // 设置作者信息
         tvAuthorName.setText(currentPost.getAuthorName());
-        tvPostTime.setText(DateUtils.formatRelativeTime(currentPost.getTimestamp()));
-        
-        // 设置分类
-        tvCategory.setText(getCategoryDisplayName(currentPost.getCategory()));
-        
-        // 设置帖子内容
         tvTitle.setText(currentPost.getTitle());
         tvContent.setText(currentPost.getContent());
-        
-        // 设置图片
-        if (currentPost.getImageUrl() != null && !currentPost.getImageUrl().isEmpty()) {
-            ivPostImage.setVisibility(View.VISIBLE);
-            // TODO: 使用图片加载库加载图片
-        } else {
-            ivPostImage.setVisibility(View.GONE);
-        }
-        
-        // 设置统计数据
+        tvPostTime.setText(DateUtils.formatRelativeTime(currentPost.getTimestamp()));
         tvLikeCount.setText(String.valueOf(currentPost.getLikeCount()));
         tvReplyCount.setText(String.valueOf(currentPost.getReplyCount()));
         tvViewCount.setText(String.valueOf(currentPost.getViewCount()));
         
-        // TODO: 设置点赞状态
+        // 设置分类显示
+        tvCategory.setText(getCategoryDisplayName(currentPost.getCategory()));
+        
+        // 设置图片（如果有）
+        if (currentPost.getImageUrl() != null && !currentPost.getImageUrl().isEmpty()) {
+            ivPostImage.setVisibility(View.VISIBLE);
+            // 使用图片加载库
+            // Glide.with(this).load(currentPost.getImageUrl()).into(ivPostImage);
+        } else {
+            ivPostImage.setVisibility(View.GONE);
+        }
     }
     
     /**

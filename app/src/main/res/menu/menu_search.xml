@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search_help"
+        android:title="搜索帮助"
+        android:icon="@drawable/ic_help"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_search_history"
+        android:title="搜索历史"
+        android:icon="@drawable/ic_history"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_toggle_strategy"
+        android:title="切换搜索策略"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_search_stats"
+        android:title="搜索统计"
+        app:showAsAction="never" />
+
+</menu>

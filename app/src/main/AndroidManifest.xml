@@ -86,6 +86,20 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <!-- 搜索Activity - 集成高级搜索功能 -->
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:label="论坛搜索"
+            android:theme="@style/Theme.LocalLife"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <!-- 帖子详情页 -->
         <activity 
             android:name=".ui.activity.PostDetailActivity"
@@ -106,6 +120,7 @@
             android:theme="@style/Theme.LocalLife"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -221,7 +236,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LocalLife" />
-
 
         <!-- ========== 服务和元数据配置 ========== -->
 

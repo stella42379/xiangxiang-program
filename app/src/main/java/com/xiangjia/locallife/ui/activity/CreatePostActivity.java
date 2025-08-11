@@ -122,11 +122,8 @@ public class CreatePostActivity extends AppCompatActivity {
      * 设置分类选择器
      */
     private void setupCategorySpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            this, 
-            android.R.layout.simple_spinner_item, 
-            categoryNames
-        );
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, 
+            android.R.layout.simple_spinner_item, categoryNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
     }
@@ -184,73 +181,76 @@ public class CreatePostActivity extends AppCompatActivity {
         cardImagePreview.setVisibility(View.GONE);
         btnAddImage.setText("添加图片");
     }
+
+    
     
     /**
      * 发布帖子
      */
-    private void publishPost() {
-        // 验证输入
-        if (!validateInput()) {
-            return;
-        }
-        
-        if (currentUser == null) {
-            Toast.makeText(this, "用户信息未加载", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        // 禁用发布按钮，防止重复提交
-        btnPublish.setEnabled(false);
-        btnPublish.setText("发布中...");
-        
-        executor.execute(() -> {
-            try {
-                // 获取输入内容
-                String title = etTitle.getText().toString().trim();
-                String content = etContent.getText().toString().trim();
-                String category = categoryValues[spinnerCategory.getSelectedItemPosition()];
-                
-                // 创建新帖子
-                ForumPost newPost = new ForumPost(
-                    currentUser.getUserId(),
-                    currentUser.getNickname(),
-                    title,
-                    content,
-                    category
-                );
-                
-                // 设置图片URL
-                if (selectedImagePath != null) {
-                    // TODO: 上传图片到服务器，获取URL
-                    // newPost.setImageUrl(uploadedImageUrl);
-                    newPost.setImageUrl(selectedImagePath); // 临时使用本地路径
-                }
-                
-                // 保存帖子
-                forumPostDao.insert(newPost);
-                
-                // 更新用户发帖数
-                currentUser.incrementPostCount();
-                userDao.updatePostCount(currentUser.getUserId(), currentUser.getPostCount());
-                
-                runOnUiThread(() -> {
-                    Toast.makeText(this, "发布成功", Toast.LENGTH_SHORT).show();
-                    
-                    // 返回结果给调用页面
-                    setResult(RESULT_OK);
-                    finish();
-                });
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> {
-                    Toast.makeText(this, "发布失败", Toast.LENGTH_SHORT).show();
-                    btnPublish.setEnabled(true);
-                    btnPublish.setText("发布");
-                });
-            }
-        });
+   /**
+ 
+
+/**
+ * 发布帖子方法
+ */
+private void publishPost() {
+    String title = etTitle.getText().toString().trim();
+    String content = etContent.getText().toString().trim();
+    int categoryIndex = spinnerCategory.getSelectedItemPosition();
+    
+    if (title.isEmpty()) {
+        tilTitle.setError("请输入帖子标题");
+        return;
     }
+    
+    if (content.isEmpty()) {
+        tilContent.setError("请输入帖子内容");
+        return;
+    }
+    
+    if (categoryIndex == 0) {
+        Toast.makeText(this, "请选择帖子分类", Toast.LENGTH_SHORT).show();
+        return;
+    }
+    
+    String category = categoryValues[categoryIndex];
+    
+    executor.execute(() -> {
+        try {
+            // 创建新帖子
+            ForumPost newPost = new ForumPost(
+                currentUser.getUserId(),
+                currentUser.getNickname(),
+                title,
+                content,
+                category
+            );
+            
+            if (selectedImagePath != null) {
+                newPost.setImageUrl(selectedImagePath);
+            }
+            
+            // 保存到数据库
+            forumPostDao.insert(newPost);
+            
+            // 更新用户发帖数
+            currentUser.incrementPostCount();
+            userDao.updatePostCount(currentUser.getUserId(), currentUser.getPostCount());
+            
+            runOnUiThread(() -> {
+                Toast.makeText(this, "发帖成功", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            });
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(() -> {
+                Toast.makeText(this, "发帖失败", Toast.LENGTH_SHORT).show();
+            });
+        }
+    });
+}
     
     /**
      * 验证输入内容

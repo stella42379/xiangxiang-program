@@ -115,7 +115,7 @@ public class ForumDataGenerator {
         List<User> users = new ArrayList<>();
         if (count < 2) count = 2; // 至少容纳两个课程测试账号
 
-        // 课程要求测试账户
+        // 课程要求测试户
         User testUser1 = new User("comp2100@anu.edu.au", "comp2100@anu.edu.au", "comp2100");
         testUser1.setNickname("COMP2100测试用户");
         testUser1.setUserRole("admin");
@@ -176,6 +176,13 @@ public class ForumDataGenerator {
                 category
             );
 
+            // 修改置顶逻辑：只有前3个帖子有机会成为置顶，且概率为30%
+            if (i < 3 && random.nextDouble() < 0.3) {
+                post.setPinned(true);
+            } else {
+                post.setPinned(false);
+            }
+
             // 时间：过去 30 天内随机
             long publishOffset = randMillis(within30Days);           // 0 ~ 30天
             long randomTime = now - publishOffset;
@@ -192,9 +199,6 @@ public class ForumDataGenerator {
             post.setLikeCount(likes);
             post.setReplyCount(replies);
             post.setViewCount(views);
-
-            // 置顶（5%）
-            if (random.nextDouble() < 0.05) post.setPinned(true);
 
             // 标签（可选）
             if (random.nextBoolean()) {
