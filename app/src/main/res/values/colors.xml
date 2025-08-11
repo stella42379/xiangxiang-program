@@ -216,7 +216,33 @@
     <!-- 🎯 文字阴影颜色 -->
     <color name="text_shadow_light">#40000000</color> <!-- 25%透明黑色 -->
     <color name="text_shadow_dark">#60000000</color>  <!-- 37.5%透明黑色 -->
-
     <color name="page_background">#FFFFFF</color>
+    <!-- 毛玻璃风格颜色 -->
+    <color name="glass_background_strong">#B3FFFFFF</color>
+    <color name="glass_background_light">#80FFFFFF</color>
+    <color name="glass_border">#66FFFFFF</color>
+    <color name="glass_border_light">#40FFFFFF</color>
+    
+    <!-- 文字颜色 -->
+    <color name="text_primary_glass">#484d61</color>
+    <color name="text_secondary_glass">#6B7280</color>
+    <color name="text_hint_glass">#9CA3AF</color>
+    
+    <!-- 背景渐变 -->
+    <color name="welcome_gradient_start">#E6F3FF</color>
+    <color name="welcome_gradient_end">#CCE7FF</color>
+    
+    <!-- 悬浮按钮 -->
+    <color name="fab_glass_background">#80FF6B35</color>
+    
+    <!-- 芯片颜色 -->
+    <color name="chip_selected_background">#B3E3F2FD</color>
+    <color name="chip_selected_border">#FF2196F3</color>
+    <color name="chip_default_background">#80FFFFFF</color>
+    
+    <!-- 状态颜色 -->
+    <color name="success_glass">#80059669</color>
+    <color name="error_glass">#80DC2626</color>
+    <color name="warning_glass">#80D97706</color>
 
 </resources>
